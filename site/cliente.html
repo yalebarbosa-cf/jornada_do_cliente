@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Sua jornada | Yale Barbosa</title>
+<meta name="description" content="Acompanhe a sua jornada no planejamento financeiro com Yale Barbosa.">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap">
+<link rel="stylesheet" href="estilo.css">
+<style>
+  section { padding-block: clamp(48px, 8vw, 96px); }
+  .lede { font-size: clamp(16px, 1.8vw, 19px); color: var(--ink-soft); max-width: 60ch; }
+  .atualizado { font-size: 13px; color: var(--ink-soft); text-align: right; }
+
+  /* Abertura */
+  .abertura { padding-block: clamp(36px, 6vw, 72px) clamp(36px, 5vw, 56px); }
+  .abertura h1 { font-size: clamp(36px, 5.6vw, 64px); line-height: 1.06; letter-spacing: -.01em; margin-top: 18px; max-width: 16ch; }
+  .abertura .lede { margin-top: 20px; }
+  .resumo { margin-top: 36px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .r-card { min-width: 0; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; }
+  .r-card.noite { background: var(--night); border-color: var(--night); color: var(--on-night); }
+  .r-label { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: var(--gold); }
+  .r-card.noite .r-label { color: var(--coin); }
+  .r-valor { font-family: var(--display); font-size: clamp(22px, 2.6vw, 28px); line-height: 1.2; margin-top: 6px; }
+  .r-sub { font-size: 14px; color: var(--ink-soft); margin-top: 2px; }
+  .r-card.noite .r-sub { color: var(--on-night-soft); }
+
+  /* Caminho */
+  .trilha-sec { background: var(--paper-2); }
+  .trilha-sec h2, .momento h2 { font-size: clamp(30px, 4vw, 46px); line-height: 1.12; margin-top: 16px; }
+  .dica { margin-top: 14px; color: var(--ink-soft); font-size: 15px; }
+  .caminho { position: relative; margin-top: 40px; }
+  .caminho > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .caminho .base { fill: none; stroke: color-mix(in srgb, var(--gold) 45%, var(--line)); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1.5 11; }
+  .caminho .feito { fill: none; stroke: var(--coin); stroke-width: 5; stroke-linecap: round; }
+  .caminho .feito-sombra { fill: none; stroke: color-mix(in srgb, var(--coin) 30%, transparent); stroke-width: 14; stroke-linecap: round; }
+
+  .parada { position: absolute; transform: translate(-50%, -50%); width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--line); background: var(--card); color: var(--ink-soft); font: italic 500 19px/1 var(--display); cursor: pointer; padding: 0; transition: transform .3s var(--ease), box-shadow .3s var(--ease); z-index: 2; }
+  .parada:hover { transform: translate(-50%, -50%) scale(1.08); }
+  .parada.feita { background: var(--coin); border-color: var(--coin); color: var(--night); }
+  .parada.feita svg { width: 22px; height: 22px; }
+  .parada.atual { background: var(--night); border-color: var(--night); color: var(--coin); }
+  .parada.atual::after { content: ''; position: absolute; inset: -8px; border-radius: 50%; border: 1.5px solid var(--coin); animation: pulso 2.4s var(--ease) infinite; }
+  .parada.sel { box-shadow: 0 0 0 5px var(--paper-2), 0 0 0 7px var(--night); }
+  @keyframes pulso { 0% { transform: scale(.9); opacity: .9; } 100% { transform: scale(1.35); opacity: 0; } }
+
+  .rotulo { position: absolute; transform: translateX(-50%); text-align: center; cursor: pointer; z-index: 1; }
+  .rotulo .data { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; color: var(--gold); }
+  .rotulo .tema { font-family: var(--display); font-size: 17px; line-height: 1.25; margin-top: 4px; color: var(--ink); }
+  .rotulo .tag { display: inline-block; margin-top: 8px; font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; background: var(--night); color: var(--coin); }
+  .rotulo.futuro .tema { color: var(--ink-soft); }
+
+  /* Caminho no celular */
+  .trilha-v { list-style: none; margin: 32px 0 0; padding: 0; }
+  .trilha-v > li { position: relative; display: grid; grid-template-columns: 54px minmax(0, 1fr); column-gap: 18px; padding-bottom: 26px; }
+  .trilha-v > li::before { content: ''; position: absolute; left: 26px; top: 54px; bottom: 0; width: 2.5px; background: repeating-linear-gradient(to bottom, color-mix(in srgb, var(--gold) 45%, var(--line)) 0 2px, transparent 2px 12px); }
+  .trilha-v > li.feita::before { background: var(--coin); width: 5px; left: 24.5px; }
+  .trilha-v > li:last-child::before { display: none; }
+  .trilha-v .parada { position: relative; transform: none; }
+  .trilha-v .parada:hover { transform: scale(1.05); }
+  .trilha-v .info { padding-top: 6px; cursor: pointer; min-width: 0; }
+  .trilha-v .data { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; color: var(--gold); }
+  .trilha-v .tema { font-family: var(--display); font-size: 19px; line-height: 1.25; margin-top: 2px; }
+  .trilha-v > li.futura .tema { color: var(--ink-soft); }
+  .trilha-v .tag { display: inline-block; margin-top: 6px; font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; background: var(--night); color: var(--coin); }
+  .trilha-v .detalhe { grid-column: 1 / -1; margin-top: 16px; }
+
+  /* Detalhe do encontro */
+  .detalhe { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: clamp(20px, 3.4vw, 36px); animation: surgir .45s var(--ease) both; }
+  #trilha > .detalhe { margin-top: 36px; }
+  @keyframes surgir { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .d-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 13px; color: var(--ink-soft); }
+  .d-num { font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+  .pill { font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 999px; background: var(--paper-2); color: var(--ink); }
+  .pill.ok { background: color-mix(in srgb, var(--coin) 28%, var(--card)); color: var(--night); }
+  .pill.prox { background: var(--night); color: var(--coin); }
+  .detalhe h3 { font-size: clamp(24px, 3vw, 32px); line-height: 1.2; margin-top: 10px; }
+  .d-grid { margin-top: 24px; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 20px; }
+  .d-bloco { min-width: 0; }
+  .d-bloco h4 { font-family: var(--body); font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  .d-bloco.noite { background: var(--night); color: var(--on-night); border-radius: 16px; padding: 20px 22px; }
+  .d-bloco.noite h4 { color: var(--coin); }
+  .rico p + p, .rico p + ul, .rico ul + p { margin-top: 10px; }
+  .rico ul { margin: 0; padding-left: 18px; }
+  .rico li + li { margin-top: 6px; }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .checks li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; align-items: start; }
+  .checks li::before { content: ''; width: 18px; height: 18px; margin-top: 3px; border-radius: 6px; border: 1.5px solid var(--coin); }
+  .vazio { color: var(--ink-soft); font-style: italic; }
+  .d-bloco.noite .vazio { color: var(--on-night-soft); }
+
+  /* Como iniciamos, onde estamos, para onde vamos */
+  .momento { background: var(--night); color: var(--on-night); }
+  .momento h2 { color: var(--on-night); }
+  .momento h2 em, .momento .eyebrow { color: var(--coin); }
+  .etapas { margin-top: 48px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; position: relative; }
+  .etapa { min-width: 0; background: var(--night-2); border-radius: 22px; padding: 28px 26px 30px; position: relative; }
+  .etapa.agora { background: var(--on-night); color: var(--ink); }
+  .e-num { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--coin); color: var(--coin); font: italic 500 19px/1 var(--display); }
+  .etapa.agora .e-num { background: var(--coin); color: var(--night); }
+  .etapa h3 { color: var(--on-night); font-size: 24px; margin-top: 20px; }
+  .etapa.agora h3 { color: var(--ink); }
+  .e-sub { font-size: 14px; color: var(--on-night-soft); margin-top: 4px; }
+  .etapa.agora .e-sub { color: var(--ink-soft); }
+  .e-corpo { margin-top: 18px; color: var(--on-night-soft); font-size: 15.5px; }
+  .etapa.agora .e-corpo { color: var(--ink); }
+  .e-lista { list-style: none; margin: 16px 0 0; padding: 16px 0 0; border-top: 1px solid color-mix(in srgb, var(--on-night-soft) 25%, transparent); display: grid; gap: 10px; font-size: 15px; }
+  .etapa.agora .e-lista { border-top-color: var(--line); }
+  .e-lista li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; align-items: start; }
+  .e-lista .ic { width: 20px; height: 20px; margin-top: 2px; color: var(--coin); }
+  .etapa.agora .e-lista .ic { color: var(--gold); }
+  .e-lista small { display: block; font-size: 12.5px; color: var(--on-night-soft); }
+  .etapa.agora .e-lista small { color: var(--ink-soft); }
+  .etapa .vazio { color: var(--on-night-soft); }
+  .etapa.agora .vazio { color: var(--ink-soft); }
+
+  /* Rodapé */
+  .rodape { padding-block: 56px 72px; }
+  .rodape .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px; }
+  .rodape h3 { font-size: clamp(22px, 2.6vw, 28px); max-width: 26ch; }
+  .rodape p { color: var(--ink-soft); margin-top: 6px; font-size: 15px; }
+  .assina { border-top: 1px solid var(--line); padding-block: 22px; font-size: 13px; color: var(--ink-soft); }
+
+  /* Estados */
+  .estado { min-height: 70vh; display: grid; place-items: center; text-align: center; padding: 40px 16px; }
+  .estado h1 { font-size: clamp(28px, 4vw, 40px); }
+  .estado p { color: var(--ink-soft); margin-top: 12px; max-width: 44ch; margin-inline: auto; }
+  .carregando { width: 42px; height: 42px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--coin); animation: gira 1s linear infinite; margin: 0 auto; }
+  @keyframes gira { to { transform: rotate(360deg); } }
+
+  @media (max-width: 860px) {
+    .etapas { grid-template-columns: minmax(0, 1fr); }
+    .d-grid { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .resumo { grid-template-columns: minmax(0, 1fr); }
+    .atualizado { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="wrap">
+    <img class="logo" src="logo.png" alt="Yale Barbosa, planejadora financeira">
+    <div class="atualizado" id="atualizado"></div>
+  </div>
+</header>
+
+<main id="app">
+  <div class="estado"><div><div class="carregando" aria-hidden="true"></div><p>Carregando a sua jornada…</p></div></div>
+</main>
+
+<script src="config.js"></script>
+<script src="comum.js"></script>
+<script>
+(function () {
+  const cfg = window.JORNADA_CONFIG || {};
+  const params = new URLSearchParams(location.search);
+  const app = document.getElementById('app');
+  const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  const ICON_SETA = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  const ICON_OK = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>';
+
+  let dados = null;
+  let sel = 0;
+  let modo = null;
+
+  function estado(titulo, texto) {
+    app.innerHTML = '<div class="estado"><div><h1>' + J.esc(titulo) + '</h1><p>' + J.esc(texto) + '</p></div></div>';
+  }
+
+  // ------------------------------------------------------------
+  // Dados
+  // ------------------------------------------------------------
+  function exemplo() {
+    return {
+      nome: 'Mariana Albuquerque',
+      inicio: '2026-06-10',
+      atualizado_em: new Date().toISOString(),
+      como_iniciamos: 'Renda familiar de cerca de R$ 22 mil por mês, mas sem saber exatamente para onde ia cada parte dela.\n\n- Investimentos espalhados em três bancos, sem objetivo definido\n- Nenhuma reserva separada para imprevistos\n- Vontade de trocar de apartamento em até 3 anos',
+      onde_estamos: 'O orçamento já está organizado por categorias e você passou a investir todo mês, logo depois que a renda entra.',
+      para_onde_vamos: 'Chegar ao fim deste ciclo com a reserva de emergência completa, a proteção da família estruturada e uma carteira alinhada a cada objetivo.',
+      reunioes: [
+        { ordem: 1, data: '2026-06-10', tema: 'Orçamento pessoal', realizada: true,
+          resumo: 'Mapeamos todas as entradas e saídas dos últimos três meses e montamos o orçamento por categorias.\n\nDefinimos que 20% da renda passa a ser investida logo no início do mês.',
+          combinados: 'Conectar as contas no aplicativo\nClassificar os gastos de junho\nSeparar os extratos dos investimentos' },
+        { ordem: 2, data: '2026-07-10', tema: 'Metas e objetivos', realizada: true,
+          resumo: 'Definimos três objetivos com valor e prazo: reserva de emergência, troca do apartamento e aposentadoria.',
+          combinados: 'Pesquisar a faixa de preço dos apartamentos que interessam\nConversar com o RH sobre a previdência da empresa' },
+        { ordem: 3, data: '2026-08-10', tema: 'Gestão patrimonial', realizada: true,
+          resumo: 'Consolidamos o patrimônio em uma visão única e decidimos concentrar os investimentos em duas instituições.',
+          combinados: 'Solicitar a portabilidade do CDB do banco C\nEnviar as apólices de seguro que vocês já têm' },
+        { ordem: 4, data: '2026-09-10', tema: 'Mapeamento de dívidas', realizada: false, resumo: '', combinados: '' },
+        { ordem: 5, data: '2026-10-10', tema: 'Gestão de riscos e proteção', realizada: false, resumo: '', combinados: '' },
+        { ordem: 6, data: '2026-11-10', tema: 'Análise de investimentos', realizada: false, resumo: '', combinados: '' }
+      ]
+    };
+  }
+
+  async function carregar() {
+    if (params.has('demo')) return exemplo();
+    const token = (params.get('c') || '').trim();
+    if (!token) return { erro: 'link' };
+    if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY) return { erro: 'config' };
+    const resp = await fetch(cfg.SUPABASE_URL.replace(/\/$/, '') + '/rest/v1/rpc/jornada_do_cliente', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: cfg.SUPABASE_ANON_KEY, Authorization: 'Bearer ' + cfg.SUPABASE_ANON_KEY },
+      body: JSON.stringify({ p_token: token })
+    });
+    if (!resp.ok) return { erro: 'link' };
+    const json = await resp.json();
+    if (!json) return { erro: 'link' };
+    return json;
+  }
+
+  // ------------------------------------------------------------
+  // Montagem da página
+  // ------------------------------------------------------------
+  function idxProximo() { return dados.reunioes.findIndex(function (r) { return !r.realizada; }); }
+
+  function montar() {
+    const rs = dados.reunioes;
+    const feitas = rs.filter(function (r) { return r.realizada; }).length;
+    const prox = idxProximo();
+    const nome = J.primeiroNome(dados.nome);
+    document.title = 'Jornada de ' + nome + ' | Yale Barbosa';
+    if (dados.atualizado_em) document.getElementById('atualizado').textContent = 'Atualizado em ' + J.fmtTimestamp(dados.atualizado_em);
+
+    let proxCard;
+    if (prox >= 0) {
+      proxCard = '<div class="r-card noite"><div class="r-label">Próximo encontro</div><div class="r-valor">' + J.fmtCurta(rs[prox].data) + '</div><div class="r-sub">' + J.esc(rs[prox].tema || 'Tema a definir') + '</div></div>';
+    } else {
+      proxCard = '<div class="r-card noite"><div class="r-label">Ciclo</div><div class="r-valor">Concluído</div><div class="r-sub">Todos os encontros realizados</div></div>';
+    }
+
+    sel = prox > 0 ? prox - 1 : (prox === -1 ? rs.length - 1 : 0);
+
+    app.innerHTML =
+      '<section class="abertura"><div class="wrap">' +
+        '<div class="eyebrow">Sua jornada de planejamento financeiro</div>' +
+        '<h1>' + J.esc(nome) + ', este é o <em>seu caminho.</em></h1>' +
+        '<p class="lede">Aqui você acompanha cada encontro que tivemos, o que decidimos juntos e os próximos passos até onde queremos chegar.</p>' +
+        '<div class="resumo">' +
+          '<div class="r-card"><div class="r-label">Início</div><div class="r-valor">' + J.fmtCurta(dados.inicio || (rs[0] && rs[0].data)) + '</div><div class="r-sub">' + J.esc(dados.nome) + '</div></div>' +
+          '<div class="r-card"><div class="r-label">Encontros</div><div class="r-valor">' + feitas + ' de ' + rs.length + '</div><div class="r-sub">' + (feitas === 1 ? 'encontro realizado' : 'encontros realizados') + '</div></div>' +
+          proxCard +
+        '</div>' +
+      '</div></section>' +
+
+      '<section class="trilha-sec"><div class="wrap caminho-wrap" id="caminhoWrap">' +
+        '<div class="eyebrow">O caminho</div>' +
+        '<h2>Cada encontro, <em>um passo.</em></h2>' +
+        '<p class="dica">Toque em um encontro para ver o que decidimos e o que ficou combinado.</p>' +
+        '<div id="trilha"></div>' +
+      '</div></section>' +
+
+      '<section class="momento"><div class="wrap">' +
+        '<div class="eyebrow">Onde você está</div>' +
+        '<h2>De onde partimos, onde estamos <em>e para onde vamos.</em></h2>' +
+        '<div class="etapas">' + blocoEtapas() + '</div>' +
+      '</div></section>' +
+
+      rodape();
+
+    desenhar();
+  }
+
+  function blocoEtapas() {
+    const rs = dados.reunioes;
+    const feitas = rs.filter(function (r) { return r.realizada; });
+    const futuras = rs.filter(function (r) { return !r.realizada; });
+    const vazio = '<p class="vazio">Vamos preencher juntos ao longo do acompanhamento.</p>';
+
+    const listaFeitas = feitas.length
+      ? '<ul class="e-lista">' + feitas.map(function (r) { return '<li>' + ICON_OK + '<span>' + J.esc(r.tema || 'Encontro ' + r.ordem) + '<small>' + J.fmtCurta(r.data) + '</small></span></li>'; }).join('') + '</ul>'
+      : '';
+    const listaFuturas = futuras.length
+      ? '<ul class="e-lista">' + futuras.slice(0, 4).map(function (r) { return '<li>' + ICON_SETA + '<span>' + J.esc(r.tema || 'Encontro ' + r.ordem) + '<small>' + J.fmtCurta(r.data) + '</small></span></li>'; }).join('') + '</ul>'
+      : '';
+
+    return (
+      '<article class="etapa"><div class="e-num">01</div><h3>Como iniciamos</h3><div class="e-sub">O ponto de partida</div>' +
+        '<div class="e-corpo rico">' + (J.textoRico(dados.como_iniciamos) || vazio) + '</div></article>' +
+      '<article class="etapa agora"><div class="e-num">02</div><h3>Onde estamos</h3><div class="e-sub">' + feitas.length + ' de ' + rs.length + ' encontros realizados</div>' +
+        '<div class="e-corpo rico">' + (J.textoRico(dados.onde_estamos) || (feitas.length ? '' : vazio)) + '</div>' + listaFeitas + '</article>' +
+      '<article class="etapa"><div class="e-num">03</div><h3>Para onde vamos</h3><div class="e-sub">' + (futuras.length ? 'Os próximos passos' : 'Ciclo concluído') + '</div>' +
+        '<div class="e-corpo rico">' + (J.textoRico(dados.para_onde_vamos) || (futuras.length ? '' : vazio)) + '</div>' + listaFuturas + '</article>'
+    );
+  }
+
+  function rodape() {
+    const zap = (cfg.WHATSAPP_YALI || '').replace(/\D/g, '');
+    const botao = zap
+      ? '<a class="btn gold" href="https://wa.me/' + zap + '?text=' + encodeURIComponent('Oi, Yale! Estou vendo a minha jornada e queria falar com você.') + '" target="_blank" rel="noopener">Falar pelo WhatsApp <span aria-hidden="true">→</span></a>'
+      : '';
+    return '<section class="rodape"><div class="wrap"><div><h3>Ficou alguma dúvida entre um encontro e outro?</h3><p>Estou por aqui pelo WhatsApp, de segunda a sexta, das 9h às 18h.</p></div>' + botao + '</div></section>' +
+      '<div class="assina"><div class="wrap">Yale Barbosa · Planejadora financeira CPRO-R · Esta página é pessoal e foi feita só para você.</div></div>';
+  }
+
+  // ------------------------------------------------------------
+  // Caminho
+  // ------------------------------------------------------------
+  function classe(i) {
+    const r = dados.reunioes[i];
+    if (r.realizada) return 'feita';
+    if (i === idxProximo()) return 'atual';
+    return 'futura';
+  }
+  function conteudoParada(i) {
+    return classe(i) === 'feita' ? ICON_CHECK : J.num2(i + 1);
+  }
+
+  function desenhar() {
+    const alvo = document.getElementById('trilha');
+    if (!alvo) return;
+    const w = alvo.clientWidth;
+    modo = w < 720 ? 'v' : 'h';
+    if (modo === 'v') desenharVertical(alvo); else desenharHorizontal(alvo, w);
+  }
+
+  function desenharVertical(alvo) {
+    const rs = dados.reunioes;
+    alvo.innerHTML = '<ol class="trilha-v">' + rs.map(function (r, i) {
+      const c = classe(i);
+      return '<li class="' + c + '" data-i="' + i + '">' +
+        '<button class="parada ' + c + (i === sel ? ' sel' : '') + '" data-i="' + i + '" aria-label="Encontro ' + (i + 1) + ': ' + J.esc(r.tema || '') + '">' + conteudoParada(i) + '</button>' +
+        '<div class="info" data-i="' + i + '"><div class="data">' + J.fmtCurta(r.data) + '</div><div class="tema">' + J.esc(r.tema || 'Encontro ' + (i + 1)) + '</div>' +
+          (c === 'atual' ? '<span class="tag">Próximo encontro</span>' : '') + '</div>' +
+        (i === sel ? detalhe(i) : '') +
+      '</li>';
+    }).join('') + '</ol>';
+    ligar(alvo);
+  }
+
+  function desenharHorizontal(alvo, w) {
+    const rs = dados.reunioes;
+    const n = rs.length;
+    const porLinha = Math.min(n, w >= 960 ? 6 : 4);
+    const linhas = Math.ceil(n / porLinha);
+    const padX = 92, topo = 46, altLinha = 200, amp = 16;
+    const passo = porLinha > 1 ? (w - 2 * padX) / (porLinha - 1) : 0;
+    const pts = [];
+
+    for (let i = 0; i < n; i++) {
+      const lin = Math.floor(i / porLinha), c = i % porLinha;
+      const col = lin % 2 === 0 ? c : porLinha - 1 - c;
+      const x = porLinha > 1 ? padX + col * passo : w / 2;
+      const y = topo + lin * altLinha + (c % 2 === 0 ? -amp : amp);
+      if (c === 0 && lin > 0) {
+        const ant = pts[pts.length - 1];
+        const xCurva = lin % 2 === 1 ? w - padX + 62 : padX - 62;
+        pts.push({ x: xCurva, y: (ant.y + y) / 2, parada: null });
+      }
+      pts.push({ x: x, y: y, parada: i });
+    }
+    // pontinho de partida antes do primeiro encontro
+    pts.unshift({ x: pts[0].x - Math.min(70, passo / 2 || 60), y: pts[0].y + amp * 1.4, parada: null, inicio: true });
+
+    const altura = topo + (linhas - 1) * altLinha + 150;
+    const prox = idxProximo();
+    const ultimaFeita = prox === -1 ? n - 1 : prox - 1;
+
+    function segmento(k) {
+      const p0 = pts[Math.max(0, k - 1)], p1 = pts[k], p2 = pts[k + 1], p3 = pts[Math.min(pts.length - 1, k + 2)];
+      const c1x = p1.x + (p2.x - p0.x) / 6, c1y = p1.y + (p2.y - p0.y) / 6;
+      const c2x = p2.x - (p3.x - p1.x) / 6, c2y = p2.y - (p3.y - p1.y) / 6;
+      return ' C' + c1x.toFixed(1) + ' ' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ' ' + c2y.toFixed(1) + ' ' + p2.x.toFixed(1) + ' ' + p2.y.toFixed(1);
+    }
+    let dBase = 'M' + pts[0].x.toFixed(1) + ' ' + pts[0].y.toFixed(1);
+    for (let k = 0; k < pts.length - 1; k++) dBase += segmento(k);
+    // arremate depois da última parada
+    const ult = pts[pts.length - 1];
+    const dirFinal = (Math.floor((n - 1) / porLinha) % 2 === 0) ? 1 : -1;
+    dBase += ' Q' + (ult.x + dirFinal * 40).toFixed(1) + ' ' + (ult.y + amp).toFixed(1) + ' ' + (ult.x + dirFinal * 64).toFixed(1) + ' ' + (ult.y + amp * 2).toFixed(1);
+
+    let dFeito = '';
+    if (ultimaFeita >= 0) {
+      const kFim = pts.findIndex(function (p) { return p.parada === ultimaFeita; });
+      dFeito = 'M' + pts[0].x.toFixed(1) + ' ' + pts[0].y.toFixed(1);
+      for (let k = 0; k < kFim; k++) dFeito += segmento(k);
+    }
+
+    const larg = Math.min(170, (passo || 200) - 14);
+    let html = '<div class="caminho" style="height:' + altura + 'px">' +
+      '<svg viewBox="0 0 ' + w + ' ' + altura + '" preserveAspectRatio="none" aria-hidden="true">' +
+        '<path class="base" d="' + dBase + '"/>' +
+        (dFeito ? '<path class="feito-sombra" d="' + dFeito + '"/><path class="feito" id="pathFeito" d="' + dFeito + '"/>' : '') +
+        '<circle cx="' + pts[0].x + '" cy="' + pts[0].y + '" r="6" fill="var(--coin)"/>' +
+      '</svg>';
+    pts.forEach(function (p) {
+      if (p.parada == null) return;
+      const i = p.parada, r = rs[i], c = classe(i);
+      html += '<button class="parada ' + c + (i === sel ? ' sel' : '') + '" data-i="' + i + '" style="left:' + p.x + 'px;top:' + p.y + 'px" aria-label="Encontro ' + (i + 1) + ': ' + J.esc(r.tema || '') + '">' + conteudoParada(i) + '</button>' +
+        '<div class="rotulo' + (c === 'futura' ? ' futuro' : '') + '" data-i="' + i + '" style="left:' + p.x + 'px;top:' + (p.y + 40) + 'px;width:' + larg + 'px">' +
+          '<div class="data">' + J.fmtCurta(r.data) + '</div><div class="tema">' + J.esc(r.tema || 'Encontro ' + (i + 1)) + '</div>' +
+          (c === 'atual' ? '<span class="tag">Próximo</span>' : '') +
+        '</div>';
+    });
+    html += '</div>' + detalhe(sel);
+    alvo.innerHTML = html;
+
+    const pf = document.getElementById('pathFeito');
+    if (pf && !alvo.dataset.animado && pf.getTotalLength) {
+      const L = pf.getTotalLength();
+      pf.style.strokeDasharray = L;
+      pf.style.strokeDashoffset = L;
+      pf.getBoundingClientRect();
+      pf.style.transition = 'stroke-dashoffset 1.6s cubic-bezier(.2,.7,.2,1) .2s';
+      pf.style.strokeDashoffset = '0';
+      alvo.dataset.animado = '1';
+    }
+    ligar(alvo);
+  }
+
+  function detalhe(i) {
+    const rs = dados.reunioes;
+    const r = rs[i];
+    if (!r) return '';
+    const c = classe(i);
+    const pill = c === 'feita' ? '<span class="pill ok">Realizado</span>' : (c === 'atual' ? '<span class="pill prox">Próximo encontro</span>' : '<span class="pill">Previsto</span>');
+    let corpo;
+    if (c === 'feita') {
+      const comb = J.itensLinha(r.combinados);
+      corpo = '<div class="d-grid">' +
+        '<div class="d-bloco"><h4>O que decidimos</h4><div class="rico">' + (J.textoRico(r.resumo) || '<p class="vazio">O resumo deste encontro será publicado em breve.</p>') + '</div></div>' +
+        '<div class="d-bloco noite"><h4>Combinados até o próximo encontro</h4>' +
+          (comb.length ? '<ul class="checks">' + comb.map(function (t) { return '<li>' + J.esc(t) + '</li>'; }).join('') + '</ul>' : '<p class="vazio">Nada pendente para este período.</p>') +
+        '</div></div>';
+    } else {
+      const ant = i > 0 ? rs[i - 1] : null;
+      const comb = ant && ant.realizada ? J.itensLinha(ant.combinados) : [];
+      corpo = '<div class="d-grid">' +
+        '<div class="d-bloco"><h4>O que vamos trabalhar</h4><div class="rico"><p>Neste encontro, o foco será <strong>' + J.esc((r.tema || 'o próximo passo do plano').toLowerCase()) + '</strong>. Ele está previsto para ' + J.fmtLonga(r.data) + '.</p>' +
+          (r.resumo ? J.textoRico(r.resumo) : '') + '</div></div>' +
+        (comb.length
+          ? '<div class="d-bloco noite"><h4>Para se preparar</h4><ul class="checks">' + comb.map(function (t) { return '<li>' + J.esc(t) + '</li>'; }).join('') + '</ul></div>'
+          : '<div class="d-bloco noite"><h4>Para se preparar</h4><p class="vazio">Antes do encontro, eu aviso se houver algo para separar.</p></div>') +
+        '</div>';
+    }
+    return '<div class="detalhe" id="detalhe" aria-live="polite">' +
+      '<div class="d-top"><span class="d-num">Encontro ' + J.num2(i + 1) + '</span><span>' + J.fmtLonga(r.data) + '</span>' + pill + '</div>' +
+      '<h3>' + J.esc(r.tema || 'Encontro ' + (i + 1)) + '</h3>' + corpo + '</div>';
+  }
+
+  function ligar(alvo) {
+    alvo.querySelectorAll('[data-i]').forEach(function (el) {
+      if (el.tagName === 'LI') return;
+      el.addEventListener('click', function () {
+        const i = Number(el.dataset.i);
+        if (i === sel && modo === 'v') return;
+        sel = i;
+        desenhar();
+        if (modo === 'h') {
+          const d = document.getElementById('detalhe');
+          if (d && d.getBoundingClientRect().top > window.innerHeight - 120) d.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      });
+    });
+  }
+
+  let larguraAnterior = 0;
+  window.addEventListener('resize', function () {
+    const t = document.getElementById('trilha');
+    if (!t || !dados) return;
+    if (Math.abs(t.clientWidth - larguraAnterior) < 4) return;
+    larguraAnterior = t.clientWidth;
+    clearTimeout(window.__rz);
+    window.__rz = setTimeout(desenhar, 120);
+  });
+
+  carregar().then(function (d) {
+    if (d.erro === 'config') return estado('Página em configuração', 'A página ainda está sendo configurada. Fale com a Yale para receber o seu link.');
+    if (d.erro) return estado('Link não encontrado', 'Este link não está ativo ou foi digitado de forma incompleta. Fale com a Yale para receber o link atualizado.');
+    dados = d;
+    dados.reunioes = (dados.reunioes || []).slice().sort(function (a, b) { return a.ordem - b.ordem; });
+    if (!dados.reunioes.length) return estado('Sua jornada está começando', 'Os encontros aparecem aqui assim que forem agendados.');
+    montar();
+    larguraAnterior = document.getElementById('trilha').clientWidth;
+  }).catch(function () {
+    estado('Não foi possível carregar', 'Verifique a sua conexão e tente novamente em instantes.');
+  });
+})();
+</script>
+</body>
+</html>
