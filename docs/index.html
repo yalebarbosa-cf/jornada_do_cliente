@@ -115,7 +115,7 @@
   .barra-l b { text-align: right; font-variant-numeric: tabular-nums; }
 
   /* Funil */
-  .quadro { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x proximity; }
+  .quadro { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(160px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x proximity; }
   .coluna { min-width: 0; background: var(--paper-2); border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 320px; scroll-snap-align: start; transition: box-shadow .2s, background .2s; }
   .coluna.alvo { background: color-mix(in srgb, var(--coin) 22%, var(--paper-2)); box-shadow: inset 0 0 0 2px var(--coin); }
   .col-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 4px 6px 2px; }
@@ -132,7 +132,20 @@
   .card .tags { display: flex; flex-wrap: wrap; gap: 6px; }
   .tag { font-size: 11.5px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: var(--paper-2); color: var(--ink); }
   .tag.ouro { background: color-mix(in srgb, var(--coin) 30%, var(--card)); }
-  .encerrados { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .largo { max-width: 1600px; }
+  .quadro .card { padding: 12px; }
+  .quadro .card b { font-size: 15px; }
+  .soltar { position: fixed; left: 50%; bottom: 20px; transform: translate(-50%, 140%); z-index: 40; display: flex; gap: 12px; transition: transform .3s var(--ease); pointer-events: none; }
+  .soltar.on { transform: translate(-50%, 0); pointer-events: auto; }
+  .soltar div { min-width: 180px; padding: 16px 22px; border-radius: 18px; font-weight: 600; text-align: center; border: 2px dashed transparent; box-shadow: 0 18px 36px -16px rgba(27,31,39,.55); transition: transform .2s, border-color .2s; }
+  .soltar .g { background: var(--coin); color: var(--night); }
+  .soltar .p { background: var(--night); color: var(--on-night); }
+  .soltar div.alvo { transform: scale(1.06); border-color: currentColor; }
+  .coluna.ganho { background: color-mix(in srgb, var(--coin) 16%, var(--paper-2)); }
+  .coluna.ganho .col-cab h3 { color: var(--gold); }
+  .coluna.perdido { background: color-mix(in srgb, var(--line) 55%, var(--paper)); }
+  .coluna.perdido .card { opacity: .78; }
+  .card .ok { font-size: 13px; color: var(--gold); font-weight: 600; }
   .lista-simples { display: grid; gap: 8px; margin-top: 14px; }
   .lista-simples a { display: flex; justify-content: space-between; gap: 12px; text-decoration: none; color: inherit; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; font-size: 14.5px; }
   .lista-simples a:hover { border-color: var(--coin); }
@@ -442,6 +455,8 @@
       mudou = false;
     }
     hashAtual = h;
+    app.classList.toggle('largo', h === 'funil');
+    document.querySelector('.topo .wrap').classList.toggle('largo', h === 'funil');
     camada.innerHTML = ''; modalEl.innerHTML = '';
     let v = h;
     if (h.indexOf('lead-') === 0) v = 'funil';
@@ -585,7 +600,7 @@
             const n = abertos.filter(function (l) { return l.etapa === e; }).length;
             return '<a class="barra-l" href="#funil"><span>' + J.nomeEtapa(e) + '</span><span class="trilho"><span class="enche" style="display:block;width:' + Math.round(100 * n / maxEt) + '%"></span></span><b>' + n + '</b></a>';
           }).join('') +
-        '</div><p class="suave pequeno" style="margin-top:14px">' + fechados + ' fechados · ' + perdidos + ' perdidos até agora</p></div>' +
+        '</div><p class="suave pequeno" style="margin-top:14px">' + fechados + (fechados === 1 ? ' ganho · ' : ' ganhos · ') + perdidos + (perdidos === 1 ? ' perdido' : ' perdidos') + ' até agora</p></div>' +
         '<div class="bloco"><div class="bloco-cab"><h2>Clientes em atendimento</h2><a href="#clientes">Ver todos</a></div>' +
           (ativos.length ? '<div class="lista-simples" style="margin-top:0">' + ativos.slice(0, 6).map(function (c) {
             const feitas = c.reunioes.filter(function (r) { return r.realizada; }).length;
@@ -640,22 +655,22 @@
   // ==========================================================
   // Funil
   // ==========================================================
-  let buscaFunil = '', mostrarFechados = '';
+  let buscaFunil = '';
   function telaFunil() {
     const hoje = J.hojeISO();
     const filtrados = S.leads.filter(function (l) { return !buscaFunil || semAcento(l.nome + ' ' + (l.profissao || '') + ' ' + (l.origem || '')).indexOf(semAcento(buscaFunil)) >= 0; });
     const abertos = filtrados.filter(function (l) { return J.ETAPAS_ABERTAS.indexOf(l.etapa) >= 0; });
     const emProposta = S.leads.filter(function (l) { return l.etapa === 'proposta' || l.etapa === 'followup'; }).reduce(function (s, l) { return s + (Number(l.valor_proposta) || 0); }, 0);
-    const fech = filtrados.filter(function (l) { return l.etapa === 'fechado'; });
-    const perd = filtrados.filter(function (l) { return l.etapa === 'perdido'; });
+    const COLUNAS = J.ETAPAS_ABERTAS.concat(['fechado', 'perdido']);
 
     app.innerHTML =
-      '<div class="cab"><div><div class="eyebrow">CRM</div><h1>Funil comercial</h1><p>' + abertos.length + ' em aberto' + (emProposta ? ' · ' + J.fmtMoeda(emProposta) + '/mês em propostas na mesa' : '') + '. Arraste os cards entre as etapas ou abra o lead para mudar.</p></div>' +
+      '<div class="cab"><div><div class="eyebrow">CRM</div><h1>Funil comercial</h1><p>' + abertos.length + ' em aberto' + (emProposta ? ' · ' + J.fmtMoeda(emProposta) + '/mês em propostas na mesa' : '') + '. Arraste os cards entre as etapas, inclusive para Ganho ou Perdido.</p></div>' +
         '<div class="cab-acoes"><input type="search" id="buscaF" placeholder="Buscar lead" aria-label="Buscar lead" value="' + J.esc(buscaFunil) + '" style="width:220px"><button class="btn small" id="bNovoLead">' + IC.mais + 'Novo lead</button></div></div>' +
-      '<div class="quadro" id="quadro">' + J.ETAPAS_ABERTAS.map(function (e) {
+      '<div class="quadro" id="quadro">' + COLUNAS.map(function (e) {
         const et = J.ETAPAS.find(function (x) { return x.id === e; });
-        const ls = abertos.filter(function (l) { return l.etapa === e; });
-        return '<section class="coluna" data-e="' + e + '" aria-label="' + et.nome + '"><div class="col-cab"><h3>' + et.nome + '</h3><span class="n">' + ls.length + '</span></div><div class="col-dica">' + et.dica + '</div>' +
+        const ls = filtrados.filter(function (l) { return l.etapa === e; });
+        const fechada = e === 'fechado' || e === 'perdido';
+        return '<section class="coluna' + (e === 'fechado' ? ' ganho' : e === 'perdido' ? ' perdido' : '') + '" data-e="' + e + '" aria-label="' + et.nome + '"><div class="col-cab"><h3>' + et.nome + '</h3><span class="n">' + ls.length + '</span></div><div class="col-dica">' + et.dica + '</div>' +
           ls.map(function (l) {
             const atras = l.proximo_passo_data && l.proximo_passo_data < hoje;
             const diag = l.diagnostico_em ? J.partesTs(l.diagnostico_em) : null;
@@ -663,47 +678,37 @@
               '<span class="m">' + J.esc([l.profissao, l.origem].filter(Boolean).join(' · ') || 'Sem origem') + '</span>' +
               ((l.renda_faixa || l.valor_proposta) ? '<span class="tags">' + (l.renda_faixa ? '<span class="tag">' + J.esc(l.renda_faixa) + '</span>' : '') + (l.valor_proposta ? '<span class="tag ouro">' + J.fmtMoeda(l.valor_proposta) + '/mês</span>' : '') + '</span>' : '') +
               (diag && e === 'diagnostico' ? '<span class="pp">Diagnóstico: ' + J.fmtCurta(diag.data) + ' às ' + diag.hora + '</span>' : '') +
-              (l.proximo_passo_data ? '<span class="pp' + (atras ? ' atrasado' : '') + '">' + (atras ? 'Atrasado · ' : '') + J.fmtCurta(l.proximo_passo_data) + ' · ' + J.esc(l.proximo_passo || 'Retomar') + '</span>' : '') +
+              (e === 'fechado' ? '<span class="ok">' + (l.cliente_id ? 'Cliente em atendimento' : 'Ganho') + '</span>' : '') +
+              (e === 'perdido' ? '<span class="m">' + J.esc(l.motivo_perda || 'Sem motivo registrado') + '</span>' : '') +
+              (!fechada && l.proximo_passo_data ? '<span class="pp' + (atras ? ' atrasado' : '') + '">' + (atras ? 'Atrasado · ' : '') + J.fmtCurta(l.proximo_passo_data) + ' · ' + J.esc(l.proximo_passo || 'Retomar') + '</span>' : '') +
               '</button>';
           }).join('') + '</section>';
       }).join('') + '</div>' +
-      '<div class="encerrados"><button class="btn ghost small" data-v="fechado">Fechados (' + fech.length + ')</button><button class="btn ghost small" data-v="perdido">Perdidos (' + perd.length + ')</button></div>' +
-      '<div id="encLista"></div>';
+      '<div class="soltar" id="soltar" aria-hidden="true"><div class="g" data-e="fechado">Soltar em Ganho</div><div class="p" data-e="perdido">Soltar em Perdido</div></div>';
 
     $('bNovoLead').onclick = modalNovoLead;
     $('buscaF').oninput = function (e) { buscaFunil = e.target.value; const pos = e.target.selectionStart; telaFunil(); const b = $('buscaF'); b.focus(); b.setSelectionRange(pos, pos); };
     document.querySelectorAll('.card').forEach(function (c) {
       c.onclick = function () { ir('lead-' + c.dataset.id); };
-      c.addEventListener('dragstart', function (ev) { ev.dataTransfer.setData('text/plain', c.dataset.id); ev.dataTransfer.effectAllowed = 'move'; c.classList.add('arrastando'); });
-      c.addEventListener('dragend', function () { c.classList.remove('arrastando'); });
+      c.addEventListener('dragstart', function (ev) { ev.dataTransfer.setData('text/plain', c.dataset.id); ev.dataTransfer.effectAllowed = 'move'; c.classList.add('arrastando'); $('soltar').classList.add('on'); });
+      c.addEventListener('dragend', function () { c.classList.remove('arrastando'); $('soltar').classList.remove('on'); });
     });
-    document.querySelectorAll('.coluna').forEach(function (col) {
+    document.querySelectorAll('.coluna, .soltar div').forEach(function (col) {
       col.addEventListener('dragover', function (ev) { ev.preventDefault(); col.classList.add('alvo'); });
       col.addEventListener('dragleave', function (ev) { if (!col.contains(ev.relatedTarget)) col.classList.remove('alvo'); });
       col.addEventListener('drop', async function (ev) {
         ev.preventDefault(); col.classList.remove('alvo');
         const id = ev.dataTransfer.getData('text/plain'); const l = S.leads.find(function (x) { return x.id === id; });
         if (!l || l.etapa === col.dataset.e) return;
+        if (col.dataset.e === 'fechado' && !l.cliente_id) return modalNovoCliente(l);
+        if (col.dataset.e === 'perdido') return modalPerder(l);
         const antes = l.etapa; l.etapa = col.dataset.e; l.etapa_desde = new Date().toISOString(); telaFunil();
-        try { await api.atualizarLead(id, { etapa: col.dataset.e }); toast(l.nome + ' → ' + J.nomeEtapa(col.dataset.e)); }
+        try { await api.atualizarLead(id, antes === 'perdido' ? { etapa: col.dataset.e, motivo_perda: '' } : { etapa: col.dataset.e }); toast(l.nome + ' → ' + J.nomeEtapa(col.dataset.e)); }
         catch (e) { l.etapa = antes; telaFunil(); toast('Não foi possível mover: ' + (e.message || e)); }
         atualizarBadge();
       });
     });
-    document.querySelectorAll('.encerrados button').forEach(function (b) {
-      b.onclick = function () { mostrarFechados = mostrarFechados === b.dataset.v ? '' : b.dataset.v; pintarEncerrados(fech, perd); };
-    });
-    pintarEncerrados(fech, perd);
   }
-  function pintarEncerrados(fech, perd) {
-    const alvo = $('encLista'); if (!alvo) return;
-    if (!mostrarFechados) { alvo.innerHTML = ''; return; }
-    const lista = mostrarFechados === 'fechado' ? fech : perd;
-    alvo.innerHTML = lista.length ? '<div class="lista-simples">' + lista.map(function (l) {
-      return '<a href="#lead-' + l.id + '"><span>' + J.esc(l.nome) + '</span><span class="suave">' + J.esc(mostrarFechados === 'perdido' ? (l.motivo_perda || 'Sem motivo registrado') : (l.valor_proposta ? J.fmtMoeda(l.valor_proposta) + '/mês' : 'Cliente')) + '</span></a>';
-    }).join('') + '</div>' : '<p class="vazio" style="margin-top:12px">Nenhum lead aqui.</p>';
-  }
-
   function modalNovoLead() {
     modalEl.innerHTML = '<div class="modal" id="mL"><form class="modal-card" id="fL"><div><div class="eyebrow">Funil</div><h2 style="margin-top:10px">Novo lead</h2></div>' +
       '<div class="grade">' +
@@ -756,7 +761,7 @@
         '<div class="cab-acoes">' +
           (zap ? '<a class="btn ghost small" href="' + zap + '" target="_blank" rel="noopener">' + IC.zap + 'WhatsApp</a>' : '') +
           (cliente ? '<a class="btn small" href="#cliente-' + cliente.id + '">Ver cliente e jornada</a>'
-            : (aberto ? '<button class="btn ghost small" id="bPerder">Marcar como perdido</button><button class="btn gold small" id="bFechar">Fechou! Virar cliente</button>'
+            : (aberto ? '<button class="btn ghost small" id="bPerder">Marcar como perdido</button><button class="btn gold small" id="bFechar">Ganho! Virar cliente</button>'
               : '<button class="btn ghost small" id="bReabrir">Reabrir no funil</button>')) +
         '</div></div>' +
       '<div class="lead-grid"><div>' +
@@ -799,7 +804,7 @@
     });
     $('salvar').onclick = salvarLead;
     if ($('bFechar')) $('bFechar').onclick = function () { modalNovoCliente(leadAtual); };
-    if ($('bPerder')) $('bPerder').onclick = modalPerder;
+    if ($('bPerder')) $('bPerder').onclick = function () { modalPerder(leadAtual); };
     if ($('bReabrir')) $('bReabrir').onclick = async function () { await api.atualizarLead(l.id, { etapa: 'followup', motivo_perda: '' }); await api.carregar(); toast('Lead de volta ao funil, em follow-up.'); rota(); };
     $('bExcluirLead').onclick = async function () {
       if (!confirm('Excluir ' + l.nome + ' e todo o histórico?')) return;
@@ -846,17 +851,19 @@
       telaLead(l.id); atualizarBadge();
     } catch (e) { toast('Não foi possível salvar: ' + (e.message || e)); b.disabled = false; b.textContent = 'Salvar alterações'; }
   }
-  function modalPerder() {
+  function modalPerder(leadAlvo) {
+    const alvoLead = leadAlvo || leadAtual;
     modalEl.innerHTML = '<div class="modal"><form class="modal-card" id="fP"><div><div class="eyebrow">Funil</div><h2 style="margin-top:10px">Marcar como perdido</h2></div>' +
       '<label class="campo">Por que não seguiu agora?<input type="text" name="motivo" list="motivos" placeholder="Ex.: preferiu adiar para o próximo ano" required></label>' +
       '<datalist id="motivos"><option value="Preferiu adiar"><option value="Achou o investimento alto"><option value="Não respondeu mais"><option value="Fechou com outra pessoa"><option value="Fora do perfil atendido"></datalist>' +
-      '<p class="suave pequeno">O lead sai do funil, mas fica guardado em "Perdidos" para um contato futuro.</p>' +
+      '<p class="suave pequeno">' + J.esc(alvoLead.nome) + ' vai para a coluna Perdido e fica guardado para um contato futuro.</p>' +
       '<div class="modal-acoes"><button type="button" class="btn ghost" data-fechar>Cancelar</button><button class="btn" type="submit">Confirmar</button></div></form></div>';
     ligarModal();
     $('fP').onsubmit = async function (e) {
       e.preventDefault();
-      await api.atualizarLead(leadAtual.id, { etapa: 'perdido', motivo_perda: e.target.motivo.value.trim(), proximo_passo_data: null });
-      await api.carregar(); mudou = false; modalEl.innerHTML = ''; toast('Lead movido para Perdidos.'); ir('funil');
+      try { await api.atualizarLead(alvoLead.id, { etapa: 'perdido', motivo_perda: e.target.motivo.value.trim(), proximo_passo_data: null }); }
+      catch (err) { toast('Erro: ' + (err.message || err)); return; }
+      await api.carregar(); mudou = false; modalEl.innerHTML = ''; toast(alvoLead.nome + ' → Perdido.'); ir('funil');
     };
   }
 
@@ -866,7 +873,7 @@
   function modalNovoCliente(lead) {
     const hoje = J.hojeISO();
     modalEl.innerHTML = '<div class="modal"><form class="modal-card" id="fC">' +
-      '<div><div class="eyebrow">' + (lead ? 'Fechou!' : 'Novo cliente') + '</div><h2 style="margin-top:10px">' + (lead ? 'Transformar em cliente' : 'Cadastrar cliente') + '</h2></div>' +
+      '<div><div class="eyebrow">' + (lead ? 'Ganho!' : 'Novo cliente') + '</div><h2 style="margin-top:10px">' + (lead ? 'Transformar em cliente' : 'Cadastrar cliente') + '</h2></div>' +
       '<div class="grade">' +
         '<label class="campo cheio">Nome completo<input type="text" name="nome" required value="' + J.esc(lead ? lead.nome : '') + '"></label>' +
         '<label class="campo">Data do 1º encontro<input type="date" name="inicio" value="' + hoje + '" required></label>' +
@@ -921,7 +928,7 @@
           '<div class="mini" aria-hidden="true">' + rs.map(function (r, i) { return '<span class="' + (r.realizada ? 'f' : (i === ip ? 'a' : '')) + '"></span>'; }).join('') + '</div>' +
           '<div class="cli-rodape"><span>' + feitas + ' de ' + rs.length + ' · ' + (prox ? 'próximo em ' + J.fmtCurta(prox.data) : 'ciclo concluído') + '</span>' +
           '<span class="tag' + (c.ativo ? ' ouro' : '') + '">' + (c.ativo ? 'Link ativo' : 'Link desligado') + '</span></div></a>';
-      }).join('') + '</div>' : '<div class="bloco" style="text-align:center"><p class="vazio">' + (S.clientes.length ? 'Nenhum cliente nesta lista.' : 'Nenhum cliente ainda. Quando um lead fechar, use "Fechou! Virar cliente" no funil.') + '</p></div>');
+      }).join('') + '</div>' : '<div class="bloco" style="text-align:center"><p class="vazio">' + (S.clientes.length ? 'Nenhum cliente nesta lista.' : 'Nenhum cliente ainda. Quando um lead for ganho, arraste o card para a coluna Ganho no funil.') + '</p></div>');
     $('bNovoCli').onclick = function () { modalNovoCliente(null); };
     $('buscaC').oninput = function (e) { buscaCli = e.target.value; const pos = e.target.selectionStart; telaClientes(); const b = $('buscaC'); b.focus(); b.setSelectionRange(pos, pos); };
     document.querySelectorAll('.filtros button').forEach(function (b) { b.onclick = function () { filtroCli = b.dataset.f; telaClientes(); }; });

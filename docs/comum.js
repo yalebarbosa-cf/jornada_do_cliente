@@ -91,7 +91,7 @@
     { id: 'diagnostico', nome: 'Diagnóstico', dica: 'Reunião de diagnóstico marcada' },
     { id: 'proposta', nome: 'Proposta enviada', dica: 'Aguardando decisão' },
     { id: 'followup', nome: 'Follow-up', dica: 'Retomar a conversa' },
-    { id: 'fechado', nome: 'Fechado', dica: 'Virou cliente' },
+    { id: 'fechado', nome: 'Ganho', dica: 'Fechou e virou cliente' },
     { id: 'perdido', nome: 'Perdido', dica: 'Não seguiu agora' }
   ];
   const ETAPAS_ABERTAS = ['novo', 'contato', 'diagnostico', 'proposta', 'followup'];
