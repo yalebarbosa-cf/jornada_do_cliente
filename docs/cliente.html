@@ -233,7 +233,7 @@
 
     let proxCard;
     if (prox >= 0) {
-      proxCard = '<div class="r-card noite"><div class="r-label">Próximo encontro</div><div class="r-valor">' + J.fmtCurta(rs[prox].data) + '</div><div class="r-sub">' + J.esc(rs[prox].tema || 'Tema a definir') + '</div></div>';
+      proxCard = '<div class="r-card noite"><div class="r-label">Próximo encontro</div><div class="r-valor">' + J.fmtCurta(rs[prox].data) + (rs[prox].hora ? ' · ' + J.esc(rs[prox].hora) : '') + '</div><div class="r-sub">' + J.esc(rs[prox].tema || 'Tema a definir') + '</div></div>';
     } else {
       proxCard = '<div class="r-card noite"><div class="r-label">Ciclo</div><div class="r-valor">Concluído</div><div class="r-sub">Todos os encontros realizados</div></div>';
     }
@@ -294,7 +294,7 @@
   }
 
   function rodape() {
-    const zap = (cfg.WHATSAPP_YALI || '').replace(/\D/g, '');
+    const zap = (dados.whatsapp || cfg.WHATSAPP_YALI || '').replace(/\D/g, '');
     const botao = zap
       ? '<a class="btn gold" href="https://wa.me/' + zap + '?text=' + encodeURIComponent('Oi, Yale! Estou vendo a minha jornada e queria falar com você.') + '" target="_blank" rel="noopener">Falar pelo WhatsApp <span aria-hidden="true">→</span></a>'
       : '';
@@ -435,7 +435,7 @@
       const ant = i > 0 ? rs[i - 1] : null;
       const comb = ant && ant.realizada ? J.itensLinha(ant.combinados) : [];
       corpo = '<div class="d-grid">' +
-        '<div class="d-bloco"><h4>O que vamos trabalhar</h4><div class="rico"><p>Neste encontro, o foco será <strong>' + J.esc((r.tema || 'o próximo passo do plano').toLowerCase()) + '</strong>. Ele está previsto para ' + J.fmtLonga(r.data) + '.</p>' +
+        '<div class="d-bloco"><h4>O que vamos trabalhar</h4><div class="rico"><p>Neste encontro, o foco será <strong>' + J.esc((r.tema || 'o próximo passo do plano').toLowerCase()) + '</strong>. Ele está previsto para ' + J.fmtLonga(r.data) + (r.hora ? ', às ' + J.esc(r.hora) : '') + '.</p>' +
           (r.resumo ? J.textoRico(r.resumo) : '') + '</div></div>' +
         (comb.length
           ? '<div class="d-bloco noite"><h4>Para se preparar</h4><ul class="checks">' + comb.map(function (t) { return '<li>' + J.esc(t) + '</li>'; }).join('') + '</ul></div>'

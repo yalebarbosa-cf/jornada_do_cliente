@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel | Yale Barbosa</title>
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap">
+<link rel="stylesheet" href="estilo.css">
+<style>
+  main { padding-block: 28px 120px; }
+  .aviso { background: var(--night); color: var(--on-night); font-size: 14px; padding: 10px 0; }
+  .aviso b { color: var(--coin); }
+
+  /* Topo e navegação */
+  .topo .wrap { flex-wrap: wrap; row-gap: 8px; }
+  .nav { display: flex; gap: 4px; background: var(--paper-2); border-radius: 999px; padding: 4px; }
+  .nav a { text-decoration: none; color: var(--ink-soft); font-weight: 600; font-size: 14.5px; padding: 9px 16px; border-radius: 999px; transition: background .2s, color .2s; white-space: nowrap; }
+  .nav a:hover { color: var(--ink); }
+  .nav a.on { background: var(--night); color: var(--on-night); }
+  .nav a .qt { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; margin-left: 6px; border-radius: 999px; background: var(--coin); color: var(--night); font-size: 11.5px; }
+  .topo-dir { display: flex; align-items: center; gap: 6px; }
+  .icone { width: 40px; height: 40px; border-radius: 12px; border: 0; background: transparent; color: var(--ink-soft); display: grid; place-items: center; cursor: pointer; text-decoration: none; flex: none; }
+  .icone:hover { background: var(--paper-2); color: var(--ink); }
+  .icone svg { width: 19px; height: 19px; }
+  @media (max-width: 860px) {
+    .topo .wrap { padding-bottom: 10px; }
+    .nav { order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav a { flex: 1; text-align: center; padding: 9px 12px; }
+  }
+
+  h1 { font-size: clamp(30px, 4vw, 42px); line-height: 1.12; }
+  h2 { font-size: 24px; line-height: 1.2; }
+  .cab { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 26px; }
+  .cab p { color: var(--ink-soft); margin-top: 6px; }
+  .cab .eyebrow + h1 { margin-top: 12px; }
+  .cab-acoes { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .suave { color: var(--ink-soft); }
+  .pequeno { font-size: 13.5px; }
+
+  /* Campos */
+  label.campo { display: grid; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--ink); min-width: 0; align-content: start; }
+  label.campo small { font-weight: 400; color: var(--ink-soft); }
+  input[type=text], input[type=email], input[type=password], input[type=date], input[type=time], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], select, textarea {
+    width: 100%; min-width: 0; font: 400 15px/1.45 var(--body); color: var(--ink); background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; transition: border-color .2s, box-shadow .2s; }
+  textarea { resize: vertical; min-height: 88px; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--coin); box-shadow: 0 0 0 3px color-mix(in srgb, var(--coin) 30%, transparent); }
+  .grade { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .grade.tres { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cheio { grid-column: 1 / -1; }
+
+  .bloco { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: clamp(18px, 2.6vw, 26px); min-width: 0; }
+  .bloco + .bloco { margin-top: 16px; }
+  .bloco > h2 { font-size: 22px; }
+  .bloco > .sub { color: var(--ink-soft); font-size: 14px; margin-top: 4px; margin-bottom: 16px; }
+  .bloco-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .bloco-cab h2 { font-size: 22px; }
+  .bloco-cab a { font-size: 14px; font-weight: 600; color: var(--ink); text-decoration: none; border-bottom: 1.5px solid var(--coin); }
+  .vazio { color: var(--ink-soft); font-size: 14.5px; padding: 8px 0; }
+
+  /* Login */
+  .login { min-height: calc(100vh - 160px); display: grid; place-items: center; }
+  .login-card { width: min(100%, 420px); background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 34px 28px; display: grid; gap: 18px; }
+  .erro { color: var(--danger); font-size: 14px; }
+
+  /* Início */
+  .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+  .kpi { min-width: 0; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 18px 20px; text-decoration: none; color: inherit; transition: border-color .25s, transform .25s var(--ease); }
+  .kpi:hover { border-color: var(--coin); transform: translateY(-2px); }
+  .kpi.noite { background: var(--night); border-color: var(--night); color: var(--on-night); }
+  .kpi .l { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: var(--gold); }
+  .kpi.noite .l { color: var(--coin); }
+  .kpi .v { font-family: var(--display); font-size: clamp(28px, 3.4vw, 38px); line-height: 1.1; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .kpi .s { font-size: 13.5px; color: var(--ink-soft); margin-top: 4px; }
+  .kpi.noite .s { color: var(--on-night-soft); }
+  .duas { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 16px; align-items: start; }
+  .duas > div { min-width: 0; display: grid; gap: 16px; }
+  .duas .bloco + .bloco { margin-top: 0; }
+
+  .atencao { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .atencao a { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 12px; align-items: center; text-decoration: none; color: inherit; padding: 12px 14px; border-radius: 14px; background: #fff; border: 1px solid var(--line); transition: border-color .2s; }
+  .atencao a:hover { border-color: var(--coin); }
+  .atencao .p { width: 10px; height: 10px; border-radius: 50%; background: var(--coin); }
+  .atencao .p.urg { background: var(--danger); }
+  .atencao b { font-weight: 600; display: block; font-size: 15px; overflow-wrap: anywhere; }
+  .atencao span.s { font-size: 13px; color: var(--ink-soft); }
+  .atencao .q { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); white-space: nowrap; }
+
+  .dias { display: grid; gap: 18px; }
+  .dia h3 { font-family: var(--body); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: var(--gold); margin-bottom: 8px; }
+  .dia.hoje h3 { color: var(--night); }
+  .comp { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 11px 12px; border-radius: 14px; background: #fff; border: 1px solid var(--line); }
+  .comp + .comp { margin-top: 8px; }
+  .comp .hr { font-family: var(--display); font-size: 17px; font-variant-numeric: tabular-nums; }
+  .comp .hr.sem { font-family: var(--body); font-size: 12px; color: var(--ink-soft); }
+  .comp a.t { text-decoration: none; color: var(--ink); font-weight: 600; font-size: 15px; display: block; overflow-wrap: anywhere; }
+  .comp a.t:hover { color: var(--gold); }
+  .comp .s { font-size: 13px; color: var(--ink-soft); }
+  .tipo { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; margin-right: 6px; vertical-align: 1px; }
+  .tipo.encontro { background: color-mix(in srgb, var(--coin) 30%, var(--card)); color: var(--night); }
+  .tipo.diagnostico { background: var(--night); color: var(--coin); }
+  .tipo.followup { background: var(--paper-2); color: var(--ink); }
+  .gbtn { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--ink); text-decoration: none; padding: 7px 10px; border-radius: 10px; border: 1.5px solid var(--line); white-space: nowrap; }
+  .gbtn:hover { border-color: var(--coin); }
+  .gbtn svg { width: 14px; height: 14px; }
+
+  .barras { display: grid; gap: 10px; }
+  .barra-l { display: grid; grid-template-columns: 130px minmax(0, 1fr) 28px; gap: 10px; align-items: center; font-size: 14px; text-decoration: none; color: inherit; }
+  .barra-l .trilho { height: 10px; border-radius: 999px; background: var(--paper-2); overflow: hidden; }
+  .barra-l .enche { height: 100%; border-radius: 999px; background: var(--coin); }
+  .barra-l b { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Funil */
+  .quadro { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x proximity; }
+  .coluna { min-width: 0; background: var(--paper-2); border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 320px; scroll-snap-align: start; transition: box-shadow .2s, background .2s; }
+  .coluna.alvo { background: color-mix(in srgb, var(--coin) 22%, var(--paper-2)); box-shadow: inset 0 0 0 2px var(--coin); }
+  .col-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 4px 6px 2px; }
+  .col-cab h3 { font-family: var(--body); font-size: 14px; font-weight: 600; }
+  .col-cab .n { font-size: 13px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .col-dica { font-size: 12.5px; color: var(--ink-soft); padding: 0 6px 4px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; cursor: pointer; text-align: left; font: inherit; color: inherit; display: grid; gap: 8px; transition: border-color .2s, box-shadow .2s, transform .2s var(--ease); width: 100%; }
+  .card:hover { border-color: var(--coin); box-shadow: 0 14px 24px -20px rgba(27,31,39,.5); }
+  .card.arrastando { opacity: .45; }
+  .card b { font-size: 15.5px; font-weight: 600; overflow-wrap: anywhere; }
+  .card .m { font-size: 13px; color: var(--ink-soft); }
+  .card .pp { font-size: 13px; display: flex; gap: 6px; align-items: baseline; }
+  .card .pp.atrasado { color: var(--danger); font-weight: 600; }
+  .card .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-size: 11.5px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: var(--paper-2); color: var(--ink); }
+  .tag.ouro { background: color-mix(in srgb, var(--coin) 30%, var(--card)); }
+  .encerrados { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .lista-simples { display: grid; gap: 8px; margin-top: 14px; }
+  .lista-simples a { display: flex; justify-content: space-between; gap: 12px; text-decoration: none; color: inherit; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; font-size: 14.5px; }
+  .lista-simples a:hover { border-color: var(--coin); }
+
+  /* Lead */
+  .voltar { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-soft); font: 600 14px var(--body); background: none; border: 0; padding: 0; cursor: pointer; margin-bottom: 16px; text-decoration: none; }
+  .voltar:hover { color: var(--ink); }
+  .pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 999px; background: var(--night); color: var(--coin); }
+  .pill.claro { background: var(--paper-2); color: var(--ink); }
+  .lead-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 16px; align-items: start; }
+  .lead-grid > div { min-width: 0; }
+  .lead-grid .bloco + .bloco { margin-top: 16px; }
+  .etapas-sel { display: flex; flex-wrap: wrap; gap: 6px; }
+  .etapas-sel button { font: 600 13px var(--body); padding: 8px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: #fff; color: var(--ink-soft); cursor: pointer; }
+  .etapas-sel button:hover { border-color: var(--coin); color: var(--ink); }
+  .etapas-sel button.on { background: var(--night); border-color: var(--night); color: var(--coin); }
+  .hist { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 0; }
+  .hist li { position: relative; padding: 0 0 16px 26px; }
+  .hist li::before { content: ''; position: absolute; left: 5px; top: 8px; width: 9px; height: 9px; border-radius: 50%; background: var(--coin); }
+  .hist li::after { content: ''; position: absolute; left: 9px; top: 20px; bottom: 0; width: 1.5px; background: var(--line); }
+  .hist li:last-child::after { display: none; }
+  .hist .q { font-size: 12.5px; color: var(--ink-soft); display: flex; gap: 8px; align-items: center; }
+  .hist .q b { color: var(--gold); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; font-size: 11.5px; }
+  .hist .x { margin-left: auto; background: none; border: 0; color: var(--ink-soft); cursor: pointer; font-size: 12px; padding: 0; }
+  .hist .x:hover { color: var(--danger); }
+  .hist p { font-size: 14.5px; margin-top: 2px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .add-hist { display: grid; gap: 10px; margin-top: 14px; }
+  .add-hist .lin { display: flex; gap: 10px; }
+  .add-hist select { width: auto; flex: none; }
+
+  /* Clientes */
+  .filtros { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .filtros button { font: 600 13.5px var(--body); padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--ink-soft); cursor: pointer; }
+  .filtros button.on { background: var(--night); color: var(--on-night); border-color: var(--night); }
+  .lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .cli { min-width: 0; text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 20px; cursor: pointer; font: inherit; color: inherit; display: grid; gap: 12px; transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s; text-decoration: none; }
+  .cli:hover { transform: translateY(-3px); box-shadow: 0 20px 36px -26px rgba(27,31,39,.45); border-color: var(--coin); }
+  .cli h3 { font-size: 21px; line-height: 1.25; overflow-wrap: anywhere; }
+  .cli .meta { font-size: 13.5px; color: var(--ink-soft); }
+  .mini { display: flex; gap: 5px; }
+  .mini span { flex: 1; height: 6px; border-radius: 999px; background: var(--line); }
+  .mini span.f { background: var(--coin); }
+  .mini span.a { background: var(--night); }
+  .cli-rodape { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13.5px; }
+
+  /* Editor do cliente */
+  .link-box { background: var(--night); color: var(--on-night); border-radius: 22px; padding: 20px 22px; display: grid; gap: 12px; margin-bottom: 16px; }
+  .link-box .r { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .link-box input { flex: 1 1 260px; background: var(--night-2); border-color: var(--night-2); color: var(--on-night); font-size: 14px; }
+  .link-box .lbl { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: var(--coin); }
+  .link-box .btn.ghost { color: var(--on-night); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--on-night-soft) 45%, transparent); }
+  .link-box .btn.ghost::before { background: var(--night-2); }
+  .link-box .btn.ghost:hover { color: var(--on-night); }
+  .link-off { color: var(--coin); font-size: 14px; }
+  .reuniao { border: 1px solid var(--line); border-radius: 18px; background: #fff; margin-top: 10px; overflow: hidden; }
+  .reuniao.feita { border-color: color-mix(in srgb, var(--coin) 70%, var(--line)); }
+  .r-cab { display: grid; grid-template-columns: 40px 150px 96px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; padding: 10px 12px; }
+  .r-num { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--line); font: italic 500 15px/1 var(--display); color: var(--ink-soft); }
+  .reuniao.feita .r-num { background: var(--coin); border-color: var(--coin); color: var(--night); }
+  .toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; cursor: pointer; white-space: nowrap; user-select: none; }
+  .toggle input { appearance: none; -webkit-appearance: none; width: 40px; height: 24px; border-radius: 999px; background: var(--line); position: relative; cursor: pointer; transition: background .2s; margin: 0; flex: none; }
+  .toggle input::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform .2s var(--ease); box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .toggle input:checked { background: var(--night); }
+  .toggle input:checked::after { transform: translateX(16px); background: var(--coin); }
+  .abrir svg { transition: transform .25s var(--ease); }
+  .reuniao.aberta .abrir svg { transform: rotate(180deg); }
+  .r-corpo { display: none; padding: 4px 12px 14px 62px; gap: 12px; }
+  .reuniao.aberta .r-corpo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .r-pe { grid-column: 1 / -1; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .remover { color: var(--danger); background: none; border: 0; font: 600 13.5px var(--body); cursor: pointer; padding: 4px 0; }
+  .acoes-link { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; align-items: center; }
+  button.link { background: none; border: 0; padding: 0 0 2px; cursor: pointer; font: 600 14px var(--body); color: var(--ink); border-bottom: 1.5px solid var(--coin); }
+
+  /* Barra de salvar, modais e avisos */
+  .barra { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: color-mix(in srgb, var(--card) 94%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .barra .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 12px; }
+  .barra .info { font-size: 14px; color: var(--ink-soft); }
+  .barra .info.mudou { color: var(--gold); font-weight: 600; }
+  .modal { position: fixed; inset: 0; z-index: 50; background: rgba(27,31,39,.45); display: grid; place-items: center; padding: 16px; animation: fade .2s both; }
+  .modal-card { width: min(100%, 560px); max-height: calc(100vh - 32px); overflow: auto; background: var(--card); border-radius: 24px; padding: 28px 26px; display: grid; gap: 16px; box-shadow: 0 30px 60px -20px rgba(27,31,39,.5); }
+  .modal-card h2 { font-size: 26px; }
+  .modal-acoes { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+  .marca { display: flex; gap: 10px; align-items: start; font-size: 14px; }
+  .marca input { margin-top: 3px; accent-color: var(--night); }
+  @keyframes fade { from { opacity: 0; } }
+  .toast { position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%); z-index: 60; background: var(--night); color: var(--on-night); padding: 12px 20px; border-radius: 999px; font-size: 14.5px; box-shadow: 0 14px 30px -12px rgba(27,31,39,.6); animation: fade .2s both; max-width: calc(100vw - 32px); text-align: center; }
+
+  /* Agenda */
+  .agenda-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .agenda-grid > div { min-width: 0; }
+  .gframe { width: 100%; height: 640px; border: 0; border-radius: 16px; background: #fff; display: block; }
+  .modos { display: flex; gap: 6px; }
+  .modos button { font: 600 13px var(--body); padding: 7px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--ink-soft); cursor: pointer; }
+  .modos button.on { background: var(--night); color: var(--on-night); border-color: var(--night); }
+  .sem-agenda { border: 1.5px dashed var(--line); border-radius: 18px; padding: 36px 22px; text-align: center; display: grid; gap: 10px; justify-items: center; }
+  .sem-agenda h3 { font-size: 22px; }
+  .sem-agenda p { color: var(--ink-soft); max-width: 44ch; font-size: 14.5px; }
+
+  @media (max-width: 1000px) {
+    .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .duas, .lead-grid, .agenda-grid { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 720px) {
+    .grade, .grade.tres { grid-template-columns: minmax(0, 1fr); }
+    .kpi { padding: 14px 16px; }
+    .r-cab { grid-template-columns: 38px minmax(0, 1fr) minmax(0, 1fr) auto; }
+    .r-cab .r-tema { grid-column: 1 / -1; grid-row: 3; }
+    .r-cab .toggle { grid-column: 1 / 4; grid-row: 2; }
+    .r-cab .abrir { grid-column: 4; grid-row: 2; }
+    .r-corpo { padding-left: 12px; }
+    .reuniao.aberta .r-corpo { grid-template-columns: minmax(0, 1fr); }
+    .gframe { height: 520px; }
+    .barra-l { grid-template-columns: 110px minmax(0, 1fr) 24px; }
+  }
+</style>
+</head>
+<body>
+<div id="avisoDemo"></div>
+<header class="topo">
+  <div class="wrap">
+    <a href="#inicio"><img class="logo" src="logo.png" alt="Yale Barbosa, planejadora financeira"></a>
+    <nav class="nav" id="nav" hidden>
+      <a href="#inicio" data-v="inicio">Início</a>
+      <a href="#agenda" data-v="agenda">Agenda</a>
+      <a href="#funil" data-v="funil">Funil</a>
+      <a href="#clientes" data-v="clientes">Clientes</a>
+    </nav>
+    <div class="topo-dir" id="topoDir"></div>
+  </div>
+</header>
+<main class="wrap" id="app"><p class="suave">Carregando…</p></main>
+<div id="camada"></div>
+<div id="modal"></div>
+
+<script src="config.js"></script>
+<script src="comum.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  const cfg = window.JORNADA_CONFIG || {};
+  const DEMO = new URLSearchParams(location.search).has('demo') || !cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY || !window.supabase;
+  const $ = function (id) { return document.getElementById(id); };
+  const app = $('app'), camada = $('camada'), modalEl = $('modal');
+  const IC = {
+    mais: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+    voltar: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+    seta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+    copiar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
+    zap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/></svg>',
+    olho: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+    cal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18M12 14v4M10 16h4"/></svg>',
+    eng: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+    sair: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>'
+  };
+  const S = { leads: [], clientes: [], config: {} };
+
+  function uuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16); });
+  }
+  function toast(msg) {
+    const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; t.setAttribute('role', 'status');
+    document.body.appendChild(t); setTimeout(function () { t.remove(); }, 2800);
+  }
+  function semAcento(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  function linkDoCliente(token) { return location.href.split('#')[0].split('?')[0].replace(/[^/]*$/, '') + 'cliente.html?c=' + token; }
+  function numero(v) { if (v === '' || v == null) return null; const n = Number(String(v).replace(/\./g, '').replace(',', '.')); return isNaN(n) ? null : n; }
+  function ordenarReunioes(c) { c.reunioes = (c.reunioes || []).slice().sort(function (a, b) { return a.ordem - b.ordem; }); return c; }
+
+  // ==========================================================
+  // Dados: Supabase ou demonstração
+  // ==========================================================
+  let api;
+  if (DEMO) {
+    $('avisoDemo').innerHTML = '<div class="aviso"><div class="wrap"><b>Modo demonstração.</b> Dados de exemplo, guardados só neste navegador.</div></div>';
+    const CH = 'painel-yale-demo-v2';
+    let mem = null;
+    const ler = function () {
+      if (mem) return mem;
+      try { mem = JSON.parse(localStorage.getItem(CH)); } catch (e) { mem = null; }
+      if (!mem || !mem.leads) mem = semente();
+      return mem;
+    };
+    const gravar = function () { try { localStorage.setItem(CH, JSON.stringify(mem)); } catch (e) {} };
+    const copia = function (x) { return JSON.parse(JSON.stringify(x)); };
+    function semente() {
+      const hoje = J.hojeISO();
+      const d = function (n) { const x = J.parseData(hoje); x.setDate(x.getDate() + n); return J.iso(x); };
+      const ts = function (n, h) { const x = J.parseData(d(n)); x.setHours(h, 0, 0, 0); return x.toISOString(); };
+      const agora = new Date().toISOString();
+      const clientes = [];
+      function cli(nome, prof, inicioOff, feitas, valor, extra) {
+        const id = uuid(); const ini = d(inicioOff);
+        clientes.push(Object.assign({ id: id, token: uuid(), nome: nome, profissao: prof, email: '', whatsapp: '', inicio: ini, valor_mensal: valor, situacao: 'ativo', ativo: true, observacoes: '', como_iniciamos: '', onde_estamos: '', para_onde_vamos: '', updated_at: agora,
+          reunioes: J.TEMAS_PADRAO.map(function (t, i) { return { id: uuid(), ordem: i + 1, data: J.addMeses(ini, i), hora: '10:00', tema: t, realizada: i < feitas, resumo: i < feitas ? 'Resumo do encontro ' + (i + 1) + '.' : '', combinados: '' }; }) }, extra || {}));
+        return id;
+      }
+      const c1 = cli('Mariana Albuquerque', 'Advogada', -95, 3, 597, {
+        como_iniciamos: 'Renda familiar de cerca de R$ 22 mil por mês, mas sem saber para onde ia cada parte dela.\n\n- Investimentos espalhados em três bancos\n- Nenhuma reserva para imprevistos',
+        onde_estamos: 'Orçamento organizado e investimento automático todo mês.', para_onde_vamos: 'Reserva completa e proteção da família estruturada até o fim do ciclo.' });
+      cli('Dra. Renata Figueiredo', 'Médica', -35, 1, 697);
+      cli('Paulo e Lívia Sampaio', 'Casal empresário', -150, 5, 797);
+      const L = function (o) { return Object.assign({ id: uuid(), whatsapp: '(81) 9' + Math.floor(10000000 + Math.random() * 89999999), email: '', origem: 'Formulário de diagnóstico', profissao: 'Advogada', renda_faixa: 'R$ 15 a 20 mil', momento: 'Fazer o patrimônio crescer', quando_comecar: 'Nas próximas semanas', motivo: '', etapa: 'novo', etapa_desde: agora, diagnostico_em: null, proximo_passo: '', proximo_passo_data: null, valor_proposta: null, motivo_perda: '', cliente_id: null, created_at: agora, updated_at: agora }, o); };
+      const leads = [
+        L({ nome: 'Camila Rocha', origem: 'Página das advogadas', renda_faixa: 'Acima de R$ 20 mil', quando_comecar: 'O quanto antes' }),
+        L({ nome: 'Juliana Prado', profissao: 'Médica', origem: 'Instagram', renda_faixa: 'R$ 10 a 15 mil', momento: 'Organizar as contas', created_at: ts(-3, 9) }),
+        L({ nome: 'Beatriz Nogueira', etapa: 'contato', motivo: 'Acabou de sair de um escritório grande e abriu o próprio. Renda subiu, mas não sabe quanto pode retirar por mês.', proximo_passo: 'Enviar link do formulário', proximo_passo_data: d(-1) }),
+        L({ nome: 'Fernanda Lins', profissao: 'Médica', origem: 'Indicação', etapa: 'contato', proximo_passo: 'Ligar para marcar o diagnóstico', proximo_passo_data: d(1) }),
+        L({ nome: 'Aline Barros', etapa: 'diagnostico', diagnostico_em: ts(2, 15), motivo: 'Casamento em 2027 e quer comprar o primeiro imóvel.' }),
+        L({ nome: 'Tatiana Mello', etapa: 'proposta', valor_proposta: 597, proximo_passo: 'Retomar sobre a proposta', proximo_passo_data: d(0) }),
+        L({ nome: 'Larissa Costa', profissao: 'Médica', etapa: 'followup', valor_proposta: 697, proximo_passo: 'Mensagem de follow-up', proximo_passo_data: d(4) }),
+        L({ nome: 'Mariana Albuquerque', etapa: 'fechado', cliente_id: c1, valor_proposta: 597 }),
+        L({ nome: 'Patrícia Gomes', etapa: 'perdido', motivo_perda: 'Preferiu adiar para o ano que vem' })
+      ];
+      const atividades = [
+        { id: uuid(), lead_id: leads[2].id, tipo: 'whatsapp', texto: 'Primeiro contato. Respondeu rápido e quer entender quanto pode retirar do escritório.', criado_em: ts(-2, 11) },
+        { id: uuid(), lead_id: leads[5].id, tipo: 'reuniao', texto: 'Diagnóstico feito. Foco em aposentadoria e proteção.', criado_em: ts(-6, 14) },
+        { id: uuid(), lead_id: leads[5].id, tipo: 'email', texto: 'Proposta enviada.', criado_em: ts(-5, 10) }
+      ];
+      return { leads: leads, clientes: clientes, atividades: atividades, config: { google_agenda: '', whatsapp: '' } };
+    }
+    api = {
+      async sessao() { return { email: 'demonstração' }; },
+      async entrar() { return null; },
+      async sair() {},
+      async carregar() { const m = ler(); S.leads = copia(m.leads); S.clientes = copia(m.clientes).map(ordenarReunioes); S.config = copia(m.config || {}); },
+      async criarLead(l) { const n = Object.assign({ id: uuid(), etapa: 'novo', etapa_desde: new Date().toISOString(), created_at: new Date().toISOString() }, l); ler().leads.push(n); gravar(); return n.id; },
+      async atualizarLead(id, campos) { const l = ler().leads.find(function (x) { return x.id === id; }); if (campos.etapa && campos.etapa !== l.etapa) campos.etapa_desde = new Date().toISOString(); Object.assign(l, campos, { updated_at: new Date().toISOString() }); gravar(); },
+      async excluirLead(id) { ler(); mem.leads = mem.leads.filter(function (x) { return x.id !== id; }); mem.atividades = mem.atividades.filter(function (a) { return a.lead_id !== id; }); gravar(); },
+      async atividades(leadId) { return copia(ler().atividades.filter(function (a) { return a.lead_id === leadId; })).sort(function (a, b) { return b.criado_em.localeCompare(a.criado_em); }); },
+      async addAtividade(a) { ler().atividades.push(Object.assign({ id: uuid(), criado_em: new Date().toISOString() }, a)); gravar(); },
+      async excluirAtividade(id) { ler(); mem.atividades = mem.atividades.filter(function (a) { return a.id !== id; }); gravar(); },
+      async criarCliente(c, rs) { const n = Object.assign({ id: uuid(), token: uuid(), ativo: true, situacao: 'ativo', updated_at: new Date().toISOString() }, c, { reunioes: rs.map(function (r) { return Object.assign({ id: uuid() }, r); }) }); ler().clientes.push(n); gravar(); return n.id; },
+      async salvarCliente(c, rs) { const lista = ler().clientes; const i = lista.findIndex(function (x) { return x.id === c.id; }); lista[i] = Object.assign({}, lista[i], c, { reunioes: rs, updated_at: new Date().toISOString() }); gravar(); },
+      async excluirCliente(id) { ler(); mem.clientes = mem.clientes.filter(function (x) { return x.id !== id; }); mem.leads.forEach(function (l) { if (l.cliente_id === id) l.cliente_id = null; }); gravar(); },
+      async novoToken(id) { const c = ler().clientes.find(function (x) { return x.id === id; }); c.token = uuid(); gravar(); return c.token; },
+      async salvarConfig(c) { ler().config = Object.assign({}, c); gravar(); }
+    };
+  } else {
+    const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+    const ok = function (r) { if (r.error) throw r.error; return r.data; };
+    const vazioNulo = function (o) { const x = {}; Object.keys(o).forEach(function (k) { x[k] = o[k] === '' ? null : o[k]; }); return x; };
+    const CAMPOS_LEAD = ['nome', 'whatsapp', 'email', 'origem', 'profissao', 'renda_faixa', 'momento', 'quando_comecar', 'motivo', 'etapa', 'diagnostico_em', 'proximo_passo', 'proximo_passo_data', 'valor_proposta', 'motivo_perda', 'cliente_id'];
+    const CAMPOS_CLI = ['nome', 'email', 'whatsapp', 'profissao', 'inicio', 'valor_mensal', 'situacao', 'observacoes', 'como_iniciamos', 'onde_estamos', 'para_onde_vamos', 'ativo'];
+    const filtra = function (o, campos) { const x = {}; campos.forEach(function (k) { if (k in o) x[k] = o[k]; }); return vazioNulo(x); };
+    const reu = function (r, cid) { return { id: r.id, cliente_id: cid, ordem: r.ordem, data: r.data || null, hora: r.hora || null, tema: r.tema || null, realizada: !!r.realizada, resumo: r.resumo || null, combinados: r.combinados || null }; };
+    let uid = null;
+    api = {
+      async sessao() { const s = (await sb.auth.getSession()).data.session; uid = s ? s.user.id : null; return s ? { email: s.user.email } : null; },
+      async entrar(email, senha) { const r = await sb.auth.signInWithPassword({ email: email, password: senha }); return r.error ? 'E-mail ou senha incorretos.' : null; },
+      async sair() { await sb.auth.signOut(); },
+      async carregar() {
+        const res = await Promise.all([
+          sb.from('leads').select('*').order('created_at', { ascending: false }),
+          sb.from('clientes').select('*, reunioes(*)').order('nome'),
+          sb.from('configuracoes').select('*').maybeSingle()
+        ]);
+        S.leads = ok(res[0]) || []; S.clientes = (ok(res[1]) || []).map(ordenarReunioes); S.config = ok(res[2]) || {};
+      },
+      async criarLead(l) { return ok(await sb.from('leads').insert(filtra(l, CAMPOS_LEAD)).select('id').single()).id; },
+      async atualizarLead(id, campos) { ok(await sb.from('leads').update(filtra(campos, CAMPOS_LEAD)).eq('id', id)); },
+      async excluirLead(id) { ok(await sb.from('leads').delete().eq('id', id)); },
+      async atividades(leadId) { return ok(await sb.from('atividades').select('*').eq('lead_id', leadId).order('criado_em', { ascending: false })) || []; },
+      async addAtividade(a) { ok(await sb.from('atividades').insert({ lead_id: a.lead_id, tipo: a.tipo, texto: a.texto })); },
+      async excluirAtividade(id) { ok(await sb.from('atividades').delete().eq('id', id)); },
+      async criarCliente(c, rs) {
+        const n = ok(await sb.from('clientes').insert(filtra(c, CAMPOS_CLI)).select('id').single());
+        if (rs.length) ok(await sb.from('reunioes').insert(rs.map(function (r) { return reu(Object.assign({ id: uuid() }, r), n.id); })));
+        return n.id;
+      },
+      async salvarCliente(c, rs, removidos) {
+        ok(await sb.from('clientes').update(filtra(c, CAMPOS_CLI)).eq('id', c.id));
+        if (removidos && removidos.length) ok(await sb.from('reunioes').delete().in('id', removidos));
+        if (rs.length) ok(await sb.from('reunioes').upsert(rs.map(function (r) { return reu(r, c.id); })));
+      },
+      async excluirCliente(id) { ok(await sb.from('clientes').delete().eq('id', id)); },
+      async novoToken(id) { const t = uuid(); ok(await sb.from('clientes').update({ token: t }).eq('id', id)); return t; },
+      async salvarConfig(c) { ok(await sb.from('configuracoes').upsert(vazioNulo({ owner_id: uid, google_agenda: c.google_agenda || '', whatsapp: c.whatsapp || '' }))); }
+    };
+  }
+
+  // ==========================================================
+  // Navegação
+  // ==========================================================
+  let mudou = false;
+  let hashAtual = '';
+  window.addEventListener('beforeunload', function (e) { if (mudou) { e.preventDefault(); e.returnValue = ''; } });
+
+  async function iniciar() {
+    const s = await api.sessao().catch(function () { return null; });
+    if (!s) return telaLogin();
+    $('nav').hidden = false;
+    $('topoDir').innerHTML = '<button class="icone" id="bConfig" title="Configurações" aria-label="Configurações">' + IC.eng + '</button>' +
+      (DEMO ? '' : '<button class="icone" id="bSair" title="Sair" aria-label="Sair">' + IC.sair + '</button>');
+    $('bConfig').onclick = modalConfig;
+    if ($('bSair')) $('bSair').onclick = async function () { await api.sair(); location.hash = ''; location.reload(); };
+    try { await api.carregar(); }
+    catch (e) { app.innerHTML = '<p class="erro">Não foi possível carregar os dados: ' + J.esc(e.message || e) + '</p>'; return; }
+    window.addEventListener('hashchange', rota);
+    rota();
+  }
+
+  function rota() {
+    const h = location.hash.replace(/^#/, '') || 'inicio';
+    if (mudou && h !== hashAtual) {
+      if (!confirm('Há alterações não salvas. Sair mesmo assim?')) { history.replaceState(null, '', '#' + hashAtual); return; }
+      mudou = false;
+    }
+    hashAtual = h;
+    camada.innerHTML = ''; modalEl.innerHTML = '';
+    let v = h;
+    if (h.indexOf('lead-') === 0) v = 'funil';
+    if (h.indexOf('cliente-') === 0) v = 'clientes';
+    document.querySelectorAll('#nav a').forEach(function (a) { a.classList.toggle('on', a.dataset.v === v); });
+    atualizarBadge();
+    window.scrollTo(0, 0);
+    if (h.indexOf('lead-') === 0) return telaLead(h.slice(5));
+    if (h.indexOf('cliente-') === 0) return telaCliente(h.slice(8));
+    if (h === 'agenda') return telaAgenda();
+    if (h === 'funil') return telaFunil();
+    if (h === 'clientes') return telaClientes();
+    return telaInicio();
+  }
+  function ir(h) { if (location.hash === '#' + h) rota(); else location.hash = '#' + h; }
+
+  function atualizarBadge() {
+    const n = S.leads.filter(function (l) { return l.etapa === 'novo'; }).length;
+    const a = document.querySelector('#nav a[data-v=funil]');
+    if (a) a.innerHTML = 'Funil' + (n ? '<span class="qt">' + n + '</span>' : '');
+  }
+
+  function telaLogin() {
+    app.innerHTML = '<div class="login"><form class="login-card" id="fLogin">' +
+      '<div class="eyebrow">Área da planejadora</div><h1>Seu painel</h1>' +
+      '<label class="campo">E-mail<input type="email" name="email" autocomplete="username" required></label>' +
+      '<label class="campo">Senha<input type="password" name="senha" autocomplete="current-password" required></label>' +
+      '<div class="erro" id="erro" role="alert"></div>' +
+      '<button class="btn" type="submit">Entrar <span aria-hidden="true">→</span></button></form></div>';
+    $('fLogin').onsubmit = async function (e) {
+      e.preventDefault();
+      const f = e.target, b = f.querySelector('button'); b.disabled = true;
+      const erro = await api.entrar(f.email.value.trim(), f.senha.value);
+      if (erro) { $('erro').textContent = erro; b.disabled = false; return; }
+      location.reload();
+    };
+  }
+
+  // ==========================================================
+  // Compromissos (agenda do painel)
+  // ==========================================================
+  function compromissos() {
+    const out = [];
+    S.clientes.forEach(function (c) {
+      if (c.situacao === 'encerrado') return;
+      c.reunioes.forEach(function (r, i) {
+        if (r.realizada || !r.data) return;
+        out.push({ tipo: 'encontro', rotulo: 'Encontro', data: r.data, hora: r.hora || '', titulo: c.nome, sub: 'Encontro ' + (i + 1) + (r.tema ? ' · ' + r.tema : ''), href: '#cliente-' + c.id,
+          google: J.linkGoogle('Planejamento · ' + c.nome + ' (encontro ' + (i + 1) + ')', r.data, r.hora, 90, r.tema || '') });
+      });
+    });
+    S.leads.forEach(function (l) {
+      if (J.ETAPAS_ABERTAS.indexOf(l.etapa) < 0) return;
+      if (l.diagnostico_em) {
+        const p = J.partesTs(l.diagnostico_em);
+        out.push({ tipo: 'diagnostico', rotulo: 'Diagnóstico', data: p.data, hora: p.hora, titulo: l.nome, sub: 'Reunião de diagnóstico', href: '#lead-' + l.id,
+          google: J.linkGoogle('Diagnóstico · ' + l.nome, p.data, p.hora, 60, l.motivo || '') });
+      }
+      if (l.proximo_passo_data) {
+        out.push({ tipo: 'followup', rotulo: 'Follow-up', data: l.proximo_passo_data, hora: '', titulo: l.nome, sub: l.proximo_passo || 'Retomar contato', href: '#lead-' + l.id,
+          google: J.linkGoogle('Follow-up · ' + l.nome, l.proximo_passo_data, '', 0, l.proximo_passo || '') });
+      }
+    });
+    out.sort(function (a, b) { return (a.data + (a.hora || '99')).localeCompare(b.data + (b.hora || '99')); });
+    return out;
+  }
+
+  function htmlDias(itens, vazioTxt) {
+    if (!itens.length) return '<p class="vazio">' + vazioTxt + '</p>';
+    const hoje = J.hojeISO();
+    const grupos = {};
+    itens.forEach(function (c) { (grupos[c.data] = grupos[c.data] || []).push(c); });
+    return '<div class="dias">' + Object.keys(grupos).sort().map(function (d) {
+      const dd = J.diasEntre(hoje, d);
+      const nomeDia = dd === 0 ? 'Hoje' : dd === 1 ? 'Amanhã' : (J.diaSemana(d) + ', ' + J.fmtCurta(d));
+      return '<div class="dia' + (dd === 0 ? ' hoje' : '') + '"><h3>' + nomeDia + '</h3>' + grupos[d].map(function (c) {
+        return '<div class="comp"><div class="hr' + (c.hora ? '' : ' sem') + '">' + (c.hora || 'Dia todo') + '</div>' +
+          '<div><a class="t" href="' + c.href + '"><span class="tipo ' + c.tipo + '">' + c.rotulo + '</span>' + J.esc(c.titulo) + '</a><div class="s">' + J.esc(c.sub) + '</div></div>' +
+          '<a class="gbtn" href="' + c.google + '" target="_blank" rel="noopener" title="Adicionar à Agenda do Google">' + IC.cal + 'Google</a></div>';
+      }).join('') + '</div>';
+    }).join('') + '</div>';
+  }
+
+  // ==========================================================
+  // Início
+  // ==========================================================
+  function telaInicio() {
+    const hoje = J.hojeISO();
+    const abertos = S.leads.filter(function (l) { return J.ETAPAS_ABERTAS.indexOf(l.etapa) >= 0; });
+    const novos = abertos.filter(function (l) { return l.etapa === 'novo'; });
+    const ativos = S.clientes.filter(function (c) { return c.situacao === 'ativo'; });
+    const receita = ativos.reduce(function (s, c) { return s + (Number(c.valor_mensal) || 0); }, 0);
+    const fechados = S.leads.filter(function (l) { return l.etapa === 'fechado'; }).length;
+    const perdidos = S.leads.filter(function (l) { return l.etapa === 'perdido'; }).length;
+    const conv = fechados + perdidos ? Math.round(100 * fechados / (fechados + perdidos)) + '%' : '—';
+    const diag = abertos.filter(function (l) { return l.diagnostico_em && J.partesTs(l.diagnostico_em).data >= hoje; }).length;
+
+    const atencao = [];
+    abertos.forEach(function (l) {
+      if (l.proximo_passo_data && l.proximo_passo_data < hoje) atencao.push({ urg: true, t: l.nome, s: 'Follow-up atrasado: ' + (l.proximo_passo || 'retomar contato'), q: J.fmtCurta(l.proximo_passo_data), href: '#lead-' + l.id });
+      if (l.etapa === 'novo') {
+        const dias = J.diasEntre(J.iso(new Date(l.created_at)), hoje);
+        atencao.push({ urg: dias >= 2, t: l.nome, s: 'Novo lead aguardando o primeiro contato' + (l.origem ? ' · ' + l.origem : ''), q: dias === 0 ? 'hoje' : 'há ' + dias + (dias === 1 ? ' dia' : ' dias'), href: '#lead-' + l.id });
+      }
+      if (l.etapa === 'proposta' && !l.proximo_passo_data) atencao.push({ urg: false, t: l.nome, s: 'Proposta enviada sem próximo passo definido', q: '', href: '#lead-' + l.id });
+    });
+    S.clientes.forEach(function (c) {
+      if (c.situacao !== 'ativo') return;
+      c.reunioes.forEach(function (r, i) {
+        if (!r.realizada && r.data && r.data < hoje) atencao.push({ urg: false, t: c.nome, s: 'Encontro ' + (i + 1) + ' já passou: registre o resumo e marque como realizado', q: J.fmtCurta(r.data), href: '#cliente-' + c.id });
+      });
+    });
+    atencao.sort(function (a, b) { return (b.urg ? 1 : 0) - (a.urg ? 1 : 0); });
+
+    const limite = J.iso(new Date(J.parseData(hoje).getTime() + 7 * 86400000));
+    const semana = compromissos().filter(function (c) { return c.data >= hoje && c.data <= limite; });
+    const maxEt = Math.max(1, Math.max.apply(null, J.ETAPAS_ABERTAS.map(function (e) { return abertos.filter(function (l) { return l.etapa === e; }).length; })));
+    const h = new Date().getHours();
+    const saud = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+
+    app.innerHTML =
+      '<div class="cab"><div><div class="eyebrow">' + J.fmtLonga(hoje) + '</div><h1>' + saud + ', Yali.</h1>' +
+        '<p>' + (function () { const n = semana.filter(function (c) { return c.data === hoje; }).length; return n ? 'Você tem ' + n + (n === 1 ? ' compromisso hoje.' : ' compromissos hoje.') : 'Nenhum compromisso marcado para hoje.'; })() + '</p></div>' +
+        '<div class="cab-acoes"><button class="btn ghost small" id="bNovoLead">' + IC.mais + 'Novo lead</button><button class="btn small" id="bNovoCli">' + IC.mais + 'Novo cliente</button></div></div>' +
+      '<div class="kpis">' +
+        '<a class="kpi" href="#funil"><div class="l">Leads em aberto</div><div class="v">' + abertos.length + '</div><div class="s">' + novos.length + (novos.length === 1 ? ' novo aguardando contato' : ' novos aguardando contato') + '</div></a>' +
+        '<a class="kpi" href="#agenda"><div class="l">Diagnósticos</div><div class="v">' + diag + '</div><div class="s">agendados a partir de hoje</div></a>' +
+        '<a class="kpi" href="#clientes"><div class="l">Em atendimento</div><div class="v">' + ativos.length + '</div><div class="s">' + (ativos.length === 1 ? 'cliente ativo' : 'clientes ativos') + '</div></a>' +
+        '<a class="kpi noite" href="#clientes"><div class="l">Receita mensal</div><div class="v">' + (J.fmtMoeda(receita) || 'R$ 0') + '</div><div class="s">conversão de ' + conv + ' nas decisões</div></a>' +
+      '</div>' +
+      '<div class="duas"><div>' +
+        '<div class="bloco"><div class="bloco-cab"><h2>Precisa da sua atenção</h2></div>' +
+          (atencao.length ? '<ul class="atencao">' + atencao.slice(0, 8).map(function (a) {
+            return '<li><a href="' + a.href + '"><span class="p' + (a.urg ? ' urg' : '') + '"></span><span><b>' + J.esc(a.t) + '</b><span class="s">' + J.esc(a.s) + '</span></span><span class="q">' + J.esc(a.q) + '</span></a></li>';
+          }).join('') + '</ul>' : '<p class="vazio">Tudo em dia. Nenhuma pendência no funil ou nos encontros.</p>') +
+        '</div>' +
+        '<div class="bloco"><div class="bloco-cab"><h2>Próximos 7 dias</h2><a href="#agenda">Ver agenda</a></div>' + htmlDias(semana, 'Nenhum encontro, diagnóstico ou follow-up nos próximos 7 dias.') + '</div>' +
+      '</div><div>' +
+        '<div class="bloco"><div class="bloco-cab"><h2>Funil comercial</h2><a href="#funil">Abrir funil</a></div><div class="barras">' +
+          J.ETAPAS_ABERTAS.map(function (e) {
+            const n = abertos.filter(function (l) { return l.etapa === e; }).length;
+            return '<a class="barra-l" href="#funil"><span>' + J.nomeEtapa(e) + '</span><span class="trilho"><span class="enche" style="display:block;width:' + Math.round(100 * n / maxEt) + '%"></span></span><b>' + n + '</b></a>';
+          }).join('') +
+        '</div><p class="suave pequeno" style="margin-top:14px">' + fechados + ' fechados · ' + perdidos + ' perdidos até agora</p></div>' +
+        '<div class="bloco"><div class="bloco-cab"><h2>Clientes em atendimento</h2><a href="#clientes">Ver todos</a></div>' +
+          (ativos.length ? '<div class="lista-simples" style="margin-top:0">' + ativos.slice(0, 6).map(function (c) {
+            const feitas = c.reunioes.filter(function (r) { return r.realizada; }).length;
+            return '<a href="#cliente-' + c.id + '"><span>' + J.esc(c.nome) + '</span><span class="suave">' + feitas + ' de ' + c.reunioes.length + '</span></a>';
+          }).join('') + '</div>' : '<p class="vazio">Nenhum cliente ativo ainda.</p>') +
+        '</div>' +
+      '</div></div>';
+    $('bNovoLead').onclick = modalNovoLead;
+    $('bNovoCli').onclick = function () { modalNovoCliente(null); };
+  }
+
+  // ==========================================================
+  // Agenda
+  // ==========================================================
+  let modoAgenda = window.innerWidth < 720 ? 'AGENDA' : 'WEEK';
+  function telaAgenda() {
+    const hoje = J.hojeISO();
+    const limite = J.addMeses(hoje, 1);
+    const itens = compromissos().filter(function (c) { return c.data >= hoje && c.data <= limite; });
+    const atrasados = compromissos().filter(function (c) { return c.data < hoje; });
+    const email = (S.config.google_agenda || '').trim();
+    let google;
+    if (!email || DEMO) {
+      google = '<div class="sem-agenda"><h3>' + (DEMO ? 'Sua Agenda do Google aparece aqui' : 'Conecte a sua Agenda do Google') + '</h3>' +
+        '<p>' + (DEMO ? 'Na versão publicada, a sua agenda real do Google fica neste espaço, com visão de semana, mês ou lista.' : 'Informe o e-mail da sua Agenda do Google nas configurações. Para ver os eventos, mantenha a sua conta Google conectada neste navegador.') + '</p>' +
+        (DEMO ? '' : '<button class="btn small" id="bConfAg">Configurar agenda</button>') + '</div>';
+    } else {
+      google = '<iframe class="gframe" id="gframe" title="Agenda do Google" src="' + srcAgenda(email) + '"></iframe>' +
+        '<p class="suave pequeno" style="margin-top:10px">Se a agenda aparecer vazia, entre na sua conta Google neste navegador. <a href="https://calendar.google.com" target="_blank" rel="noopener" style="color:var(--ink)">Abrir no Google</a></p>';
+    }
+    app.innerHTML =
+      '<div class="cab"><div><div class="eyebrow">Agenda</div><h1>Sua semana</h1><p>A Agenda do Google ao lado dos compromissos que o painel acompanha.</p></div></div>' +
+      '<div class="agenda-grid"><div class="bloco"><div class="bloco-cab"><h2>Agenda do Google</h2>' +
+        (email && !DEMO ? '<div class="modos">' + [['WEEK', 'Semana'], ['MONTH', 'Mês'], ['AGENDA', 'Lista']].map(function (m) { return '<button data-m="' + m[0] + '" class="' + (m[0] === modoAgenda ? 'on' : '') + '">' + m[1] + '</button>'; }).join('') + '</div>' : '') +
+        '</div>' + google + '</div>' +
+      '<div><div class="bloco"><div class="bloco-cab"><h2>Do painel</h2></div><p class="sub" style="margin-top:-6px">Encontros, diagnósticos e follow-ups dos próximos 30 dias. Use "Google" para levar para a sua agenda.</p>' +
+        htmlDias(itens, 'Nada marcado nos próximos 30 dias.') + '</div>' +
+        (atrasados.length ? '<div class="bloco"><div class="bloco-cab"><h2>Ficaram para trás</h2></div><div class="lista-simples" style="margin-top:0">' + atrasados.slice(-8).reverse().map(function (c) {
+          return '<a href="' + c.href + '"><span><span class="tipo ' + c.tipo + '">' + c.rotulo + '</span>' + J.esc(c.titulo) + '</span><span class="suave">' + J.fmtCurta(c.data) + '</span></a>';
+        }).join('') + '</div></div>' : '') +
+      '</div></div>';
+    const bc = $('bConfAg'); if (bc) bc.onclick = modalConfig;
+    document.querySelectorAll('.modos button').forEach(function (b) {
+      b.onclick = function () { modoAgenda = b.dataset.m; $('gframe').src = srcAgenda(email); document.querySelectorAll('.modos button').forEach(function (x) { x.classList.toggle('on', x === b); }); };
+    });
+  }
+  function srcAgenda(email) {
+    return 'https://calendar.google.com/calendar/embed?src=' + encodeURIComponent(email) + '&ctz=America%2FSao_Paulo&mode=' + modoAgenda +
+      '&wkst=1&showTitle=0&showPrint=0&showCalendars=0&showTz=0&hl=pt_BR&bgcolor=%23FFFFFF';
+  }
+
+  // ==========================================================
+  // Funil
+  // ==========================================================
+  let buscaFunil = '', mostrarFechados = '';
+  function telaFunil() {
+    const hoje = J.hojeISO();
+    const filtrados = S.leads.filter(function (l) { return !buscaFunil || semAcento(l.nome + ' ' + (l.profissao || '') + ' ' + (l.origem || '')).indexOf(semAcento(buscaFunil)) >= 0; });
+    const abertos = filtrados.filter(function (l) { return J.ETAPAS_ABERTAS.indexOf(l.etapa) >= 0; });
+    const emProposta = S.leads.filter(function (l) { return l.etapa === 'proposta' || l.etapa === 'followup'; }).reduce(function (s, l) { return s + (Number(l.valor_proposta) || 0); }, 0);
+    const fech = filtrados.filter(function (l) { return l.etapa === 'fechado'; });
+    const perd = filtrados.filter(function (l) { return l.etapa === 'perdido'; });
+
+    app.innerHTML =
+      '<div class="cab"><div><div class="eyebrow">CRM</div><h1>Funil comercial</h1><p>' + abertos.length + ' em aberto' + (emProposta ? ' · ' + J.fmtMoeda(emProposta) + '/mês em propostas na mesa' : '') + '. Arraste os cards entre as etapas ou abra o lead para mudar.</p></div>' +
+        '<div class="cab-acoes"><input type="search" id="buscaF" placeholder="Buscar lead" aria-label="Buscar lead" value="' + J.esc(buscaFunil) + '" style="width:220px"><button class="btn small" id="bNovoLead">' + IC.mais + 'Novo lead</button></div></div>' +
+      '<div class="quadro" id="quadro">' + J.ETAPAS_ABERTAS.map(function (e) {
+        const et = J.ETAPAS.find(function (x) { return x.id === e; });
+        const ls = abertos.filter(function (l) { return l.etapa === e; });
+        return '<section class="coluna" data-e="' + e + '" aria-label="' + et.nome + '"><div class="col-cab"><h3>' + et.nome + '</h3><span class="n">' + ls.length + '</span></div><div class="col-dica">' + et.dica + '</div>' +
+          ls.map(function (l) {
+            const atras = l.proximo_passo_data && l.proximo_passo_data < hoje;
+            const diag = l.diagnostico_em ? J.partesTs(l.diagnostico_em) : null;
+            return '<button class="card" draggable="true" data-id="' + l.id + '"><b>' + J.esc(l.nome) + '</b>' +
+              '<span class="m">' + J.esc([l.profissao, l.origem].filter(Boolean).join(' · ') || 'Sem origem') + '</span>' +
+              ((l.renda_faixa || l.valor_proposta) ? '<span class="tags">' + (l.renda_faixa ? '<span class="tag">' + J.esc(l.renda_faixa) + '</span>' : '') + (l.valor_proposta ? '<span class="tag ouro">' + J.fmtMoeda(l.valor_proposta) + '/mês</span>' : '') + '</span>' : '') +
+              (diag && e === 'diagnostico' ? '<span class="pp">Diagnóstico: ' + J.fmtCurta(diag.data) + ' às ' + diag.hora + '</span>' : '') +
+              (l.proximo_passo_data ? '<span class="pp' + (atras ? ' atrasado' : '') + '">' + (atras ? 'Atrasado · ' : '') + J.fmtCurta(l.proximo_passo_data) + ' · ' + J.esc(l.proximo_passo || 'Retomar') + '</span>' : '') +
+              '</button>';
+          }).join('') + '</section>';
+      }).join('') + '</div>' +
+      '<div class="encerrados"><button class="btn ghost small" data-v="fechado">Fechados (' + fech.length + ')</button><button class="btn ghost small" data-v="perdido">Perdidos (' + perd.length + ')</button></div>' +
+      '<div id="encLista"></div>';
+
+    $('bNovoLead').onclick = modalNovoLead;
+    $('buscaF').oninput = function (e) { buscaFunil = e.target.value; const pos = e.target.selectionStart; telaFunil(); const b = $('buscaF'); b.focus(); b.setSelectionRange(pos, pos); };
+    document.querySelectorAll('.card').forEach(function (c) {
+      c.onclick = function () { ir('lead-' + c.dataset.id); };
+      c.addEventListener('dragstart', function (ev) { ev.dataTransfer.setData('text/plain', c.dataset.id); ev.dataTransfer.effectAllowed = 'move'; c.classList.add('arrastando'); });
+      c.addEventListener('dragend', function () { c.classList.remove('arrastando'); });
+    });
+    document.querySelectorAll('.coluna').forEach(function (col) {
+      col.addEventListener('dragover', function (ev) { ev.preventDefault(); col.classList.add('alvo'); });
+      col.addEventListener('dragleave', function (ev) { if (!col.contains(ev.relatedTarget)) col.classList.remove('alvo'); });
+      col.addEventListener('drop', async function (ev) {
+        ev.preventDefault(); col.classList.remove('alvo');
+        const id = ev.dataTransfer.getData('text/plain'); const l = S.leads.find(function (x) { return x.id === id; });
+        if (!l || l.etapa === col.dataset.e) return;
+        const antes = l.etapa; l.etapa = col.dataset.e; l.etapa_desde = new Date().toISOString(); telaFunil();
+        try { await api.atualizarLead(id, { etapa: col.dataset.e }); toast(l.nome + ' → ' + J.nomeEtapa(col.dataset.e)); }
+        catch (e) { l.etapa = antes; telaFunil(); toast('Não foi possível mover: ' + (e.message || e)); }
+        atualizarBadge();
+      });
+    });
+    document.querySelectorAll('.encerrados button').forEach(function (b) {
+      b.onclick = function () { mostrarFechados = mostrarFechados === b.dataset.v ? '' : b.dataset.v; pintarEncerrados(fech, perd); };
+    });
+    pintarEncerrados(fech, perd);
+  }
+  function pintarEncerrados(fech, perd) {
+    const alvo = $('encLista'); if (!alvo) return;
+    if (!mostrarFechados) { alvo.innerHTML = ''; return; }
+    const lista = mostrarFechados === 'fechado' ? fech : perd;
+    alvo.innerHTML = lista.length ? '<div class="lista-simples">' + lista.map(function (l) {
+      return '<a href="#lead-' + l.id + '"><span>' + J.esc(l.nome) + '</span><span class="suave">' + J.esc(mostrarFechados === 'perdido' ? (l.motivo_perda || 'Sem motivo registrado') : (l.valor_proposta ? J.fmtMoeda(l.valor_proposta) + '/mês' : 'Cliente')) + '</span></a>';
+    }).join('') + '</div>' : '<p class="vazio" style="margin-top:12px">Nenhum lead aqui.</p>';
+  }
+
+  function modalNovoLead() {
+    modalEl.innerHTML = '<div class="modal" id="mL"><form class="modal-card" id="fL"><div><div class="eyebrow">Funil</div><h2 style="margin-top:10px">Novo lead</h2></div>' +
+      '<div class="grade">' +
+        '<label class="campo cheio">Nome<input type="text" name="nome" required></label>' +
+        '<label class="campo">WhatsApp<input type="tel" name="whatsapp" placeholder="(81) 99999-0000"></label>' +
+        '<label class="campo">Profissão<input type="text" name="profissao" list="profs" placeholder="Advogada, médica…"></label>' +
+        '<label class="campo cheio">Origem<input type="text" name="origem" list="origens" placeholder="Instagram, indicação…"></label>' +
+        '<label class="campo cheio">Por que procurou o planejamento? <small>(opcional)</small><textarea name="motivo" rows="3"></textarea></label>' +
+      '</div>' + listasSugestao() +
+      '<div class="modal-acoes"><button type="button" class="btn ghost" data-fechar>Cancelar</button><button class="btn" type="submit">Adicionar ao funil</button></div></form></div>';
+    ligarModal();
+    modalEl.querySelector('[name=nome]').focus();
+    $('fL').onsubmit = async function (e) {
+      e.preventDefault(); const f = e.target; f.querySelector('[type=submit]').disabled = true;
+      try {
+        const id = await api.criarLead({ nome: f.nome.value.trim(), whatsapp: f.whatsapp.value.trim(), profissao: f.profissao.value.trim(), origem: f.origem.value.trim(), motivo: f.motivo.value.trim(), etapa: 'novo' });
+        await api.carregar(); modalEl.innerHTML = ''; toast('Lead adicionado.'); ir('lead-' + id);
+      } catch (err) { f.querySelector('[type=submit]').disabled = false; toast('Erro: ' + (err.message || err)); }
+    };
+  }
+  function listasSugestao() {
+    const orig = ['Formulário de diagnóstico', 'Página das advogadas', 'Página das médicas', 'Instagram', 'Indicação', 'WhatsApp', 'Evento'];
+    S.leads.forEach(function (l) { if (l.origem && orig.indexOf(l.origem) < 0) orig.push(l.origem); });
+    const prof = ['Advogada', 'Advogado', 'Médica', 'Médico', 'Empresária', 'Servidora pública'];
+    return '<datalist id="origens">' + orig.map(function (o) { return '<option value="' + J.esc(o) + '">'; }).join('') + '</datalist>' +
+      '<datalist id="profs">' + prof.map(function (o) { return '<option value="' + J.esc(o) + '">'; }).join('') + '</datalist>';
+  }
+  function ligarModal() {
+    const m = modalEl.querySelector('.modal');
+    m.addEventListener('click', function (e) { if (e.target === m) modalEl.innerHTML = ''; });
+    modalEl.querySelectorAll('[data-fechar]').forEach(function (b) { b.onclick = function () { modalEl.innerHTML = ''; }; });
+  }
+
+  // ---------- Lead ----------
+  let leadAtual = null;
+  async function telaLead(id) {
+    const l0 = S.leads.find(function (x) { return x.id === id; });
+    if (!l0) { app.innerHTML = '<a class="voltar" href="#funil">' + IC.voltar + 'Funil</a><p class="erro">Lead não encontrado.</p>'; return; }
+    leadAtual = JSON.parse(JSON.stringify(l0)); mudou = false;
+    const l = leadAtual;
+    const cliente = l.cliente_id ? S.clientes.find(function (c) { return c.id === l.cliente_id; }) : null;
+    const aberto = J.ETAPAS_ABERTAS.indexOf(l.etapa) >= 0;
+    const zap = J.linkWhats(l.whatsapp, 'Oi, ' + J.primeiroNome(l.nome) + '! Aqui é a Yale Barbosa, planejadora financeira.');
+    const diag = J.partesTs(l.diagnostico_em);
+
+    app.innerHTML =
+      '<a class="voltar" href="#funil">' + IC.voltar + 'Funil</a>' +
+      '<div class="cab"><div><div class="eyebrow">Lead · desde ' + J.fmtCurta(J.iso(new Date(l.created_at))) + '</div><h1>' + J.esc(l.nome) + '</h1>' +
+        '<p><span class="pill' + (aberto ? '' : ' claro') + '">' + J.nomeEtapa(l.etapa) + '</span>' + (l.origem ? ' <span class="suave pequeno" style="margin-left:8px">via ' + J.esc(l.origem) + '</span>' : '') + '</p></div>' +
+        '<div class="cab-acoes">' +
+          (zap ? '<a class="btn ghost small" href="' + zap + '" target="_blank" rel="noopener">' + IC.zap + 'WhatsApp</a>' : '') +
+          (cliente ? '<a class="btn small" href="#cliente-' + cliente.id + '">Ver cliente e jornada</a>'
+            : (aberto ? '<button class="btn ghost small" id="bPerder">Marcar como perdido</button><button class="btn gold small" id="bFechar">Fechou! Virar cliente</button>'
+              : '<button class="btn ghost small" id="bReabrir">Reabrir no funil</button>')) +
+        '</div></div>' +
+      '<div class="lead-grid"><div>' +
+        '<div class="bloco"><h2>Momento e motivo</h2><p class="sub">O momento de vida, a dor, o objetivo e o que levou a buscar o planejamento.</p>' +
+          '<textarea data-l="motivo" rows="5">' + J.esc(l.motivo || '') + '</textarea></div>' +
+        '<div class="bloco"><h2>Histórico de contatos</h2>' +
+          '<form class="add-hist" id="fHist"><div class="lin"><select name="tipo" aria-label="Tipo de contato"><option value="whatsapp">WhatsApp</option><option value="ligacao">Ligação</option><option value="reuniao">Reunião</option><option value="email">E-mail</option><option value="nota">Anotação</option></select>' +
+          '<textarea name="texto" rows="2" placeholder="O que aconteceu neste contato?" required style="min-height:44px"></textarea></div>' +
+          '<div><button class="btn small" type="submit">Registrar</button></div></form>' +
+          '<ul class="hist" id="hist"><li><p class="suave">Carregando…</p></li></ul></div>' +
+      '</div><div>' +
+        '<div class="bloco"><h2>Etapa</h2><div class="etapas-sel" style="margin-top:12px">' + J.ETAPAS_ABERTAS.map(function (e) {
+          return '<button type="button" data-e="' + e + '" class="' + (l.etapa === e ? 'on' : '') + '">' + J.nomeEtapa(e) + '</button>';
+        }).join('') + '</div>' + (l.etapa === 'perdido' ? '<label class="campo" style="margin-top:14px">Motivo da perda<input type="text" data-l="motivo_perda" value="' + J.esc(l.motivo_perda || '') + '"></label>' : '') + '</div>' +
+        '<div class="bloco"><h2>Próximo passo</h2><div class="grade" style="margin-top:12px">' +
+          '<label class="campo cheio">O que fazer<input type="text" data-l="proximo_passo" value="' + J.esc(l.proximo_passo || '') + '" placeholder="Ex.: enviar o formulário"></label>' +
+          '<label class="campo">Quando<input type="date" data-l="proximo_passo_data" value="' + J.esc(l.proximo_passo_data || '') + '"></label>' +
+          '<label class="campo">Diagnóstico<input type="datetime-local" data-l="diagnostico_em" value="' + J.tsParaInput(l.diagnostico_em) + '"></label>' +
+        '</div>' + (diag.data ? '<p style="margin-top:12px"><a class="gbtn" href="' + J.linkGoogle('Diagnóstico · ' + l.nome, diag.data, diag.hora, 60, l.motivo || '') + '" target="_blank" rel="noopener">' + IC.cal + 'Pôr o diagnóstico na Agenda do Google</a></p>' : '') + '</div>' +
+        '<div class="bloco"><h2>Dados</h2><div class="grade" style="margin-top:12px">' +
+          '<label class="campo cheio">Nome<input type="text" data-l="nome" value="' + J.esc(l.nome) + '"></label>' +
+          '<label class="campo">WhatsApp<input type="tel" data-l="whatsapp" value="' + J.esc(l.whatsapp || '') + '"></label>' +
+          '<label class="campo">E-mail<input type="email" data-l="email" value="' + J.esc(l.email || '') + '"></label>' +
+          '<label class="campo">Profissão<input type="text" data-l="profissao" list="profs" value="' + J.esc(l.profissao || '') + '"></label>' +
+          '<label class="campo">Origem<input type="text" data-l="origem" list="origens" value="' + J.esc(l.origem || '') + '"></label>' +
+          '<label class="campo">Renda mensal<input type="text" data-l="renda_faixa" value="' + J.esc(l.renda_faixa || '') + '"></label>' +
+          '<label class="campo">Quando quer começar<input type="text" data-l="quando_comecar" value="' + J.esc(l.quando_comecar || '') + '"></label>' +
+          '<label class="campo">Momento financeiro<input type="text" data-l="momento" value="' + J.esc(l.momento || '') + '"></label>' +
+          '<label class="campo">Proposta (R$/mês)<input type="text" inputmode="decimal" data-l="valor_proposta" value="' + J.esc(l.valor_proposta == null ? '' : String(l.valor_proposta).replace('.', ',')) + '"></label>' +
+        '</div>' + listasSugestao() + '<div class="acoes-link"><button class="remover" type="button" id="bExcluirLead">Excluir lead</button></div></div>' +
+      '</div></div>';
+
+    camada.innerHTML = '<div class="barra"><div class="wrap"><span class="info" id="infoSalvar">Tudo salvo</span><button class="btn" id="salvar">Salvar alterações</button></div></div>';
+
+    app.querySelectorAll('[data-l]').forEach(function (el) {
+      el.addEventListener('input', function () { l[el.dataset.l] = el.value; marcarMudanca(); });
+    });
+    app.querySelectorAll('.etapas-sel button').forEach(function (b) {
+      b.onclick = function () { l.etapa = b.dataset.e; app.querySelectorAll('.etapas-sel button').forEach(function (x) { x.classList.toggle('on', x === b); }); marcarMudanca(); };
+    });
+    $('salvar').onclick = salvarLead;
+    if ($('bFechar')) $('bFechar').onclick = function () { modalNovoCliente(leadAtual); };
+    if ($('bPerder')) $('bPerder').onclick = modalPerder;
+    if ($('bReabrir')) $('bReabrir').onclick = async function () { await api.atualizarLead(l.id, { etapa: 'followup', motivo_perda: '' }); await api.carregar(); toast('Lead de volta ao funil, em follow-up.'); rota(); };
+    $('bExcluirLead').onclick = async function () {
+      if (!confirm('Excluir ' + l.nome + ' e todo o histórico?')) return;
+      await api.excluirLead(l.id); await api.carregar(); mudou = false; toast('Lead excluído.'); ir('funil');
+    };
+    $('fHist').onsubmit = async function (e) {
+      e.preventDefault(); const f = e.target; const t = f.texto.value.trim(); if (!t) return;
+      f.querySelector('button').disabled = true;
+      try { await api.addAtividade({ lead_id: l.id, tipo: f.tipo.value, texto: t }); f.texto.value = ''; await pintarHist(l.id); }
+      catch (err) { toast('Erro: ' + (err.message || err)); }
+      f.querySelector('button').disabled = false;
+    };
+    pintarHist(l.id);
+  }
+  const NOME_TIPO = { whatsapp: 'WhatsApp', ligacao: 'Ligação', reuniao: 'Reunião', email: 'E-mail', nota: 'Anotação' };
+  async function pintarHist(leadId) {
+    const alvo = $('hist'); if (!alvo) return;
+    let lista = [];
+    try { lista = await api.atividades(leadId); } catch (e) { alvo.innerHTML = '<li><p class="erro">Erro ao carregar o histórico.</p></li>'; return; }
+    alvo.innerHTML = lista.length ? lista.map(function (a) {
+      const d = new Date(a.criado_em);
+      return '<li><div class="q"><b>' + (NOME_TIPO[a.tipo] || a.tipo) + '</b>' + J.fmtCurta(J.iso(d)) + ', ' + J.num2(d.getHours()) + ':' + J.num2(d.getMinutes()) +
+        '<button class="x" data-id="' + a.id + '" aria-label="Apagar registro">apagar</button></div><p>' + J.esc(a.texto) + '</p></li>';
+    }).join('') : '<li><p class="suave">Nenhum contato registrado ainda.</p></li>';
+    alvo.querySelectorAll('.x').forEach(function (b) {
+      b.onclick = async function () { if (!confirm('Apagar este registro?')) return; await api.excluirAtividade(b.dataset.id); pintarHist(leadId); };
+    });
+  }
+  async function salvarLead() {
+    const l = leadAtual; const b = $('salvar');
+    if (!l.nome || !l.nome.trim()) return toast('Preencha o nome.');
+    b.disabled = true; b.textContent = 'Salvando…';
+    try {
+      const antes = S.leads.find(function (x) { return x.id === l.id; });
+      const campos = {
+        nome: l.nome.trim(), whatsapp: l.whatsapp, email: l.email, profissao: l.profissao, origem: l.origem, renda_faixa: l.renda_faixa,
+        quando_comecar: l.quando_comecar, momento: l.momento, motivo: l.motivo, etapa: l.etapa, proximo_passo: l.proximo_passo,
+        proximo_passo_data: l.proximo_passo_data || null, diagnostico_em: typeof l.diagnostico_em === 'string' && l.diagnostico_em.length === 16 ? J.inputParaTs(l.diagnostico_em) : (l.diagnostico_em || null),
+        valor_proposta: numero(l.valor_proposta), motivo_perda: l.motivo_perda
+      };
+      await api.atualizarLead(l.id, campos);
+      await api.carregar(); mudou = false;
+      toast(antes && antes.etapa !== l.etapa ? 'Salvo. ' + l.nome + ' agora está em ' + J.nomeEtapa(l.etapa) + '.' : 'Alterações salvas.');
+      telaLead(l.id); atualizarBadge();
+    } catch (e) { toast('Não foi possível salvar: ' + (e.message || e)); b.disabled = false; b.textContent = 'Salvar alterações'; }
+  }
+  function modalPerder() {
+    modalEl.innerHTML = '<div class="modal"><form class="modal-card" id="fP"><div><div class="eyebrow">Funil</div><h2 style="margin-top:10px">Marcar como perdido</h2></div>' +
+      '<label class="campo">Por que não seguiu agora?<input type="text" name="motivo" list="motivos" placeholder="Ex.: preferiu adiar para o próximo ano" required></label>' +
+      '<datalist id="motivos"><option value="Preferiu adiar"><option value="Achou o investimento alto"><option value="Não respondeu mais"><option value="Fechou com outra pessoa"><option value="Fora do perfil atendido"></datalist>' +
+      '<p class="suave pequeno">O lead sai do funil, mas fica guardado em "Perdidos" para um contato futuro.</p>' +
+      '<div class="modal-acoes"><button type="button" class="btn ghost" data-fechar>Cancelar</button><button class="btn" type="submit">Confirmar</button></div></form></div>';
+    ligarModal();
+    $('fP').onsubmit = async function (e) {
+      e.preventDefault();
+      await api.atualizarLead(leadAtual.id, { etapa: 'perdido', motivo_perda: e.target.motivo.value.trim(), proximo_passo_data: null });
+      await api.carregar(); mudou = false; modalEl.innerHTML = ''; toast('Lead movido para Perdidos.'); ir('funil');
+    };
+  }
+
+  // ==========================================================
+  // Novo cliente (direto ou a partir de um lead)
+  // ==========================================================
+  function modalNovoCliente(lead) {
+    const hoje = J.hojeISO();
+    modalEl.innerHTML = '<div class="modal"><form class="modal-card" id="fC">' +
+      '<div><div class="eyebrow">' + (lead ? 'Fechou!' : 'Novo cliente') + '</div><h2 style="margin-top:10px">' + (lead ? 'Transformar em cliente' : 'Cadastrar cliente') + '</h2></div>' +
+      '<div class="grade">' +
+        '<label class="campo cheio">Nome completo<input type="text" name="nome" required value="' + J.esc(lead ? lead.nome : '') + '"></label>' +
+        '<label class="campo">Data do 1º encontro<input type="date" name="inicio" value="' + hoje + '" required></label>' +
+        '<label class="campo">Horário<input type="time" name="hora" value="10:00"></label>' +
+        '<label class="campo">Nº de encontros<input type="number" name="qtd" min="1" max="24" value="6" required></label>' +
+        '<label class="campo">Frequência<select name="freq"><option value="1">Mensal</option><option value="2">Bimestral</option></select></label>' +
+        '<label class="campo cheio">Valor mensal (R$)<input type="text" inputmode="decimal" name="valor" value="' + J.esc(lead && lead.valor_proposta ? String(lead.valor_proposta).replace('.', ',') : '') + '" placeholder="597"></label>' +
+      '</div>' +
+      (lead && lead.motivo ? '<label class="marca"><input type="checkbox" name="usarMotivo" checked> Usar o "momento e motivo" do lead como ponto de partida da jornada (Como iniciamos)</label>' : '') +
+      '<p class="suave pequeno">As datas e os temas dos encontros são criados automaticamente. Você ajusta tudo depois.</p>' +
+      '<div class="modal-acoes"><button type="button" class="btn ghost" data-fechar>Cancelar</button><button class="btn" type="submit">Criar cliente e jornada</button></div></form></div>';
+    ligarModal();
+    $('fC').onsubmit = async function (e) {
+      e.preventDefault();
+      const f = e.target; const b = f.querySelector('[type=submit]'); b.disabled = true;
+      const qtd = Math.max(1, Math.min(24, Number(f.qtd.value) || 6)), freq = Number(f.freq.value) || 1;
+      const rs = [];
+      for (let i = 0; i < qtd; i++) rs.push({ ordem: i + 1, data: J.addMeses(f.inicio.value, i * freq), hora: f.hora.value || null, tema: J.TEMAS_PADRAO[i] || 'Acompanhamento', realizada: false, resumo: '', combinados: '' });
+      const c = { nome: f.nome.value.trim(), inicio: f.inicio.value, valor_mensal: numero(f.valor.value), situacao: 'ativo' };
+      if (lead) {
+        c.whatsapp = lead.whatsapp || ''; c.email = lead.email || ''; c.profissao = lead.profissao || '';
+        if (f.usarMotivo && f.usarMotivo.checked) c.como_iniciamos = lead.motivo;
+      }
+      try {
+        const id = await api.criarCliente(c, rs);
+        if (lead) await api.atualizarLead(lead.id, { etapa: 'fechado', cliente_id: id, valor_proposta: c.valor_mensal, proximo_passo_data: null });
+        await api.carregar(); mudou = false; modalEl.innerHTML = '';
+        toast(lead ? 'Cliente criado. A jornada e o link já estão prontos.' : 'Cliente criado.');
+        ir('cliente-' + id);
+      } catch (err) { b.disabled = false; toast('Erro: ' + (err.message || err)); }
+    };
+  }
+
+  // ==========================================================
+  // Clientes
+  // ==========================================================
+  let filtroCli = 'ativo', buscaCli = '';
+  function telaClientes() {
+    const conta = function (s) { return S.clientes.filter(function (c) { return c.situacao === s; }).length; };
+    const itens = S.clientes.filter(function (c) { return c.situacao === filtroCli && (!buscaCli || semAcento(c.nome).indexOf(semAcento(buscaCli)) >= 0); });
+    const receita = S.clientes.filter(function (c) { return c.situacao === 'ativo'; }).reduce(function (s, c) { return s + (Number(c.valor_mensal) || 0); }, 0);
+    app.innerHTML =
+      '<div class="cab"><div><div class="eyebrow">Acompanhamento</div><h1>Clientes</h1><p>' + conta('ativo') + ' em atendimento' + (receita ? ' · ' + J.fmtMoeda(receita) + ' por mês' : '') + '</p></div>' +
+        '<div class="cab-acoes"><input type="search" id="buscaC" placeholder="Buscar cliente" aria-label="Buscar cliente" value="' + J.esc(buscaCli) + '" style="width:220px"><button class="btn small" id="bNovoCli">' + IC.mais + 'Novo cliente</button></div></div>' +
+      '<div class="filtros">' + [['ativo', 'Em atendimento'], ['pausado', 'Pausados'], ['encerrado', 'Encerrados']].map(function (f) {
+        return '<button data-f="' + f[0] + '" class="' + (filtroCli === f[0] ? 'on' : '') + '">' + f[1] + ' (' + conta(f[0]) + ')</button>';
+      }).join('') + '</div>' +
+      (itens.length ? '<div class="lista">' + itens.map(function (c) {
+        const rs = c.reunioes; const feitas = rs.filter(function (r) { return r.realizada; }).length;
+        const prox = rs.find(function (r) { return !r.realizada; }); const ip = rs.indexOf(prox);
+        return '<a class="cli" href="#cliente-' + c.id + '"><div><h3>' + J.esc(c.nome) + '</h3><div class="meta">' + J.esc([c.profissao, c.valor_mensal ? J.fmtMoeda(c.valor_mensal) + '/mês' : ''].filter(Boolean).join(' · ') || 'Início em ' + J.fmtCurta(c.inicio)) + '</div></div>' +
+          '<div class="mini" aria-hidden="true">' + rs.map(function (r, i) { return '<span class="' + (r.realizada ? 'f' : (i === ip ? 'a' : '')) + '"></span>'; }).join('') + '</div>' +
+          '<div class="cli-rodape"><span>' + feitas + ' de ' + rs.length + ' · ' + (prox ? 'próximo em ' + J.fmtCurta(prox.data) : 'ciclo concluído') + '</span>' +
+          '<span class="tag' + (c.ativo ? ' ouro' : '') + '">' + (c.ativo ? 'Link ativo' : 'Link desligado') + '</span></div></a>';
+      }).join('') + '</div>' : '<div class="bloco" style="text-align:center"><p class="vazio">' + (S.clientes.length ? 'Nenhum cliente nesta lista.' : 'Nenhum cliente ainda. Quando um lead fechar, use "Fechou! Virar cliente" no funil.') + '</p></div>');
+    $('bNovoCli').onclick = function () { modalNovoCliente(null); };
+    $('buscaC').oninput = function (e) { buscaCli = e.target.value; const pos = e.target.selectionStart; telaClientes(); const b = $('buscaC'); b.focus(); b.setSelectionRange(pos, pos); };
+    document.querySelectorAll('.filtros button').forEach(function (b) { b.onclick = function () { filtroCli = b.dataset.f; telaClientes(); }; });
+  }
+
+  // ---------- Editor do cliente ----------
+  let atual = null, removidos = [];
+  function marcarMudanca() {
+    mudou = true; const i = $('infoSalvar');
+    if (i) { i.textContent = 'Alterações não salvas'; i.classList.add('mudou'); }
+  }
+  function telaCliente(id) {
+    const c0 = S.clientes.find(function (x) { return x.id === id; });
+    if (!c0) { app.innerHTML = '<a class="voltar" href="#clientes">' + IC.voltar + 'Clientes</a><p class="erro">Cliente não encontrado.</p>'; return; }
+    atual = JSON.parse(JSON.stringify(c0)); removidos = []; mudou = false;
+    pintarCliente();
+  }
+  function campoTexto(nome, rotulo, ajuda, valor) {
+    return '<label class="campo cheio">' + rotulo + (ajuda ? ' <small>' + ajuda + '</small>' : '') + '<textarea data-c="' + nome + '" rows="4">' + J.esc(valor || '') + '</textarea></label>';
+  }
+  function pintarCliente() {
+    const c = atual;
+    const link = linkDoCliente(c.token);
+    const urlZap = J.linkWhats(c.whatsapp, 'Oi, ' + J.primeiroNome(c.nome) + '! Preparei uma página só sua para você acompanhar a nossa jornada no planejamento financeiro. Por ela você vê nossos encontros, o que decidimos em cada um e os próximos passos: ' + link) ||
+      ('https://wa.me/?text=' + encodeURIComponent('Oi, ' + J.primeiroNome(c.nome) + '! Preparei uma página só sua para acompanhar a nossa jornada: ' + link));
+    const lead = S.leads.find(function (l) { return l.cliente_id === c.id; });
+
+    app.innerHTML =
+      '<a class="voltar" href="#clientes">' + IC.voltar + 'Clientes</a>' +
+      '<div class="cab"><div><div class="eyebrow">Cliente' + (c.valor_mensal ? ' · ' + J.fmtMoeda(c.valor_mensal) + '/mês' : '') + '</div><h1>' + J.esc(c.nome) + '</h1>' +
+        (lead ? '<p><a href="#lead-' + lead.id + '" style="color:var(--ink)">Ver histórico comercial</a></p>' : '') + '</div></div>' +
+      '<div class="link-box"><div class="lbl">Link da jornada do cliente</div>' +
+        (c.ativo
+          ? '<div class="r"><input type="text" readonly value="' + J.esc(link) + '" id="campoLink" aria-label="Link do cliente">' +
+            '<button class="btn gold small" id="copiar">' + IC.copiar + 'Copiar</button>' +
+            '<a class="btn ghost small" href="' + J.esc(urlZap) + '" target="_blank" rel="noopener">' + IC.zap + 'Enviar no WhatsApp</a>' +
+            '<a class="btn ghost small" href="' + J.esc(DEMO ? 'cliente.html?demo' : link) + '" target="_blank" rel="noopener" id="verPagina">' + IC.olho + 'Ver como o cliente</a></div>'
+          : '<p class="link-off">O link está desligado. O cliente não acessa a página até você religar.</p>') +
+      '</div>' +
+      '<div class="bloco"><h2>O caminho</h2><p class="sub">Marque cada encontro como realizado e registre o que foi decidido e combinado (um combinado por linha).</p>' +
+        '<div id="reunioes"></div><button class="btn ghost small" id="addReuniao" style="margin-top:12px">' + IC.mais + 'Adicionar encontro</button></div>' +
+      '<div class="bloco"><h2>Como iniciamos, onde estamos e para onde vamos</h2><p class="sub">Aparece abaixo do caminho. Para fazer tópicos, comece a linha com um traço (-).</p><div class="grade">' +
+        campoTexto('como_iniciamos', 'Como iniciamos', '(a situação no início)', c.como_iniciamos) +
+        campoTexto('onde_estamos', 'Onde estamos', '(os encontros realizados entram sozinhos)', c.onde_estamos) +
+        campoTexto('para_onde_vamos', 'Para onde vamos', '(os próximos encontros entram sozinhos)', c.para_onde_vamos) +
+      '</div></div>' +
+      '<div class="bloco"><h2>Dados do cliente</h2><p class="sub">Só você vê. Nada daqui aparece na página do cliente, além do nome.</p><div class="grade">' +
+        '<label class="campo cheio">Nome completo<input type="text" data-c="nome" value="' + J.esc(c.nome) + '"></label>' +
+        '<label class="campo">WhatsApp<input type="tel" data-c="whatsapp" value="' + J.esc(c.whatsapp || '') + '"></label>' +
+        '<label class="campo">E-mail<input type="email" data-c="email" value="' + J.esc(c.email || '') + '"></label>' +
+        '<label class="campo">Profissão<input type="text" data-c="profissao" value="' + J.esc(c.profissao || '') + '"></label>' +
+        '<label class="campo">Valor mensal (R$)<input type="text" inputmode="decimal" data-c="valor_mensal" value="' + J.esc(c.valor_mensal == null ? '' : String(c.valor_mensal).replace('.', ',')) + '"></label>' +
+        '<label class="campo">Situação<select data-c="situacao">' + [['ativo', 'Em atendimento'], ['pausado', 'Pausado'], ['encerrado', 'Encerrado']].map(function (s) { return '<option value="' + s[0] + '"' + (c.situacao === s[0] ? ' selected' : '') + '>' + s[1] + '</option>'; }).join('') + '</select></label>' +
+        campoTexto('observacoes', 'Anotações internas', '', c.observacoes) +
+      '</div><div class="acoes-link"><label class="toggle"><input type="checkbox" id="ativo"' + (c.ativo ? ' checked' : '') + '> Link da jornada ativo</label>' +
+        '<button class="link" id="novoLink" type="button">Gerar novo link</button><button class="remover" id="excluir" type="button">Excluir cliente</button></div></div>';
+
+    camada.innerHTML = '<div class="barra"><div class="wrap"><span class="info" id="infoSalvar">Tudo salvo</span><button class="btn" id="salvar">Salvar alterações</button></div></div>';
+    pintarReunioes();
+
+    app.querySelectorAll('[data-c]').forEach(function (el) {
+      el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', function () { atual[el.dataset.c] = el.value; marcarMudanca(); });
+    });
+    $('ativo').onchange = function (e) { atual.ativo = e.target.checked; marcarMudanca(); toast(e.target.checked ? 'O link volta a funcionar ao salvar.' : 'O link deixa de funcionar ao salvar.'); };
+    $('addReuniao').onclick = function () {
+      const rs = atual.reunioes, ult = rs[rs.length - 1];
+      rs.push({ id: uuid(), ordem: rs.length + 1, data: ult && ult.data ? J.addMeses(ult.data, 1) : J.hojeISO(), hora: ult ? ult.hora : '10:00', tema: J.TEMAS_PADRAO[rs.length] || 'Acompanhamento', realizada: false, resumo: '', combinados: '', _aberta: true });
+      marcarMudanca(); pintarReunioes();
+    };
+    $('salvar').onclick = salvarCliente;
+    const cp = $('copiar');
+    if (cp) cp.onclick = function () {
+      const campo = $('campoLink');
+      (navigator.clipboard ? navigator.clipboard.writeText(campo.value) : Promise.reject()).then(function () { toast('Link copiado.'); })
+        .catch(function () { campo.select(); try { document.execCommand('copy'); toast('Link copiado.'); } catch (e) { toast('Selecione o link e copie.'); } });
+    };
+    $('novoLink').onclick = async function () {
+      if (!confirm('Gerar um novo link? O antigo para de funcionar e você precisará enviar o novo ao cliente.')) return;
+      try { atual.token = await api.novoToken(atual.id); await api.carregar(); pintarCliente(); toast('Novo link gerado.'); } catch (e) { toast('Erro: ' + (e.message || e)); }
+    };
+    $('excluir').onclick = async function () {
+      if (!confirm('Excluir ' + atual.nome + ' e todos os encontros? Isso não pode ser desfeito.')) return;
+      try { await api.excluirCliente(atual.id); await api.carregar(); mudou = false; toast('Cliente excluído.'); ir('clientes'); } catch (e) { toast('Erro: ' + (e.message || e)); }
+    };
+  }
+  function pintarReunioes() {
+    const alvo = $('reunioes'); const rs = atual.reunioes;
+    if (!rs.length) { alvo.innerHTML = '<p class="vazio">Nenhum encontro ainda.</p>'; return; }
+    alvo.innerHTML = rs.map(function (r, i) {
+      const g = J.linkGoogle('Planejamento · ' + atual.nome + ' (encontro ' + (i + 1) + ')', r.data, r.hora, 90, r.tema || '');
+      return '<div class="reuniao' + (r.realizada ? ' feita' : '') + (r._aberta ? ' aberta' : '') + '" data-i="' + i + '"><div class="r-cab">' +
+        '<div class="r-num">' + J.num2(i + 1) + '</div>' +
+        '<input type="date" data-r="data" value="' + J.esc(r.data || '') + '" aria-label="Data do encontro ' + (i + 1) + '">' +
+        '<input type="time" data-r="hora" value="' + J.esc(r.hora || '') + '" aria-label="Horário do encontro ' + (i + 1) + '">' +
+        '<input type="text" class="r-tema" data-r="tema" value="' + J.esc(r.tema || '') + '" placeholder="Tema do encontro" aria-label="Tema do encontro ' + (i + 1) + '">' +
+        '<label class="toggle"><input type="checkbox" data-r="realizada"' + (r.realizada ? ' checked' : '') + '> Realizado</label>' +
+        '<button class="icone abrir" type="button" aria-label="Detalhes do encontro ' + (i + 1) + '" aria-expanded="' + (r._aberta ? 'true' : 'false') + '">' + IC.seta + '</button></div>' +
+        '<div class="r-corpo">' +
+          '<label class="campo">O que decidimos<textarea data-r="resumo" rows="4">' + J.esc(r.resumo || '') + '</textarea></label>' +
+          '<label class="campo">Combinados até o próximo encontro <small>(um por linha)</small><textarea data-r="combinados" rows="4">' + J.esc(r.combinados || '') + '</textarea></label>' +
+          '<div class="r-pe">' + (g && !r.realizada ? '<a class="gbtn" href="' + g + '" target="_blank" rel="noopener">' + IC.cal + 'Pôr na Agenda do Google</a>' : '') + '<button class="remover" type="button">Remover este encontro</button></div>' +
+        '</div></div>';
+    }).join('');
+    alvo.querySelectorAll('.reuniao').forEach(function (el) {
+      const i = Number(el.dataset.i), r = atual.reunioes[i];
+      el.querySelectorAll('[data-r]').forEach(function (inp) {
+        inp.addEventListener(inp.type === 'checkbox' ? 'change' : 'input', function () {
+          r[inp.dataset.r] = inp.type === 'checkbox' ? inp.checked : inp.value;
+          if (inp.type === 'checkbox') { el.classList.toggle('feita', inp.checked); if (inp.checked && !r._aberta) { r._aberta = true; el.classList.add('aberta'); el.querySelector('[data-r=resumo]').focus(); } }
+          marcarMudanca();
+        });
+      });
+      el.querySelector('.abrir').onclick = function () { r._aberta = !r._aberta; el.classList.toggle('aberta', r._aberta); this.setAttribute('aria-expanded', r._aberta ? 'true' : 'false'); };
+      el.querySelector('.remover').onclick = function () {
+        if (!confirm('Remover o encontro ' + (i + 1) + '?')) return;
+        atual.reunioes.splice(i, 1); if (r.id) removidos.push(r.id);
+        atual.reunioes.forEach(function (x, k) { x.ordem = k + 1; }); marcarMudanca(); pintarReunioes();
+      };
+    });
+  }
+  async function salvarCliente() {
+    const b = $('salvar');
+    if (!atual.nome || !atual.nome.trim()) return toast('Preencha o nome do cliente.');
+    b.disabled = true; b.textContent = 'Salvando…';
+    atual.reunioes.forEach(function (r, k) { r.ordem = k + 1; if (!r.id) r.id = uuid(); });
+    atual.inicio = (atual.reunioes[0] && atual.reunioes[0].data) || atual.inicio || null;
+    const limpas = atual.reunioes.map(function (r) { return { id: r.id, ordem: r.ordem, data: r.data || null, hora: r.hora || null, tema: r.tema, realizada: !!r.realizada, resumo: r.resumo || '', combinados: r.combinados || '' }; });
+    const dados = Object.assign({}, atual, { valor_mensal: numero(atual.valor_mensal) });
+    delete dados.reunioes;
+    try {
+      await api.salvarCliente(dados, limpas, removidos);
+      await api.carregar(); removidos = []; mudou = false;
+      toast('Alterações salvas. O cliente já vê a versão nova.');
+      telaCliente(atual.id);
+    } catch (e) { toast('Não foi possível salvar: ' + (e.message || e)); b.disabled = false; b.textContent = 'Salvar alterações'; }
+  }
+
+  // ==========================================================
+  // Configurações
+  // ==========================================================
+  function modalConfig() {
+    const c = S.config || {};
+    modalEl.innerHTML = '<div class="modal"><form class="modal-card" id="fCfg"><div><div class="eyebrow">Painel</div><h2 style="margin-top:10px">Configurações</h2></div>' +
+      '<label class="campo">E-mail da sua Agenda do Google <small>(o Gmail onde ficam as suas reuniões)</small><input type="email" name="google_agenda" value="' + J.esc(c.google_agenda || '') + '" placeholder="voce@gmail.com"></label>' +
+      '<label class="campo">WhatsApp de atendimento <small>(aparece como botão na página do cliente)</small><input type="tel" name="whatsapp" value="' + J.esc(c.whatsapp || '') + '" placeholder="5581999999999"></label>' +
+      '<p class="suave pequeno">A agenda só aparece no painel quando você está conectada à sua conta Google neste navegador. Ela não fica visível para mais ninguém.</p>' +
+      '<div class="modal-acoes"><button type="button" class="btn ghost" data-fechar>Cancelar</button><button class="btn" type="submit">Salvar</button></div></form></div>';
+    ligarModal();
+    $('fCfg').onsubmit = async function (e) {
+      e.preventDefault(); const f = e.target;
+      try {
+        await api.salvarConfig({ google_agenda: f.google_agenda.value.trim(), whatsapp: f.whatsapp.value.replace(/\D/g, '') });
+        await api.carregar(); modalEl.innerHTML = ''; toast('Configurações salvas.');
+        if ((location.hash || '#inicio') === '#agenda') rota();
+      } catch (err) { toast('Erro: ' + (err.message || err)); }
+    };
+  }
+
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modalEl.innerHTML) modalEl.innerHTML = ''; });
+  iniciar();
+})();
+</script>
+</body>
+</html>
