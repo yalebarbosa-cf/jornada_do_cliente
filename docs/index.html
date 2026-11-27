@@ -298,6 +298,7 @@
     olho: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
     cal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18M12 14v4M10 16h4"/></svg>',
     eng: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+    baixar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>',
     sair: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>'
   };
   const S = { leads: [], clientes: [], config: {} };
@@ -307,6 +308,7 @@
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16); });
   }
   function toast(msg) {
+    document.querySelectorAll('.toast').forEach(function (x) { x.remove(); });
     const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; t.setAttribute('role', 'status');
     document.body.appendChild(t); setTimeout(function () { t.remove(); }, 2800);
   }
@@ -382,7 +384,8 @@
       async salvarCliente(c, rs) { const lista = ler().clientes; const i = lista.findIndex(function (x) { return x.id === c.id; }); lista[i] = Object.assign({}, lista[i], c, { reunioes: rs, updated_at: new Date().toISOString() }); gravar(); },
       async excluirCliente(id) { ler(); mem.clientes = mem.clientes.filter(function (x) { return x.id !== id; }); mem.leads.forEach(function (l) { if (l.cliente_id === id) l.cliente_id = null; }); gravar(); },
       async novoToken(id) { const c = ler().clientes.find(function (x) { return x.id === id; }); c.token = uuid(); gravar(); return c.token; },
-      async salvarConfig(c) { ler().config = Object.assign({}, c); gravar(); }
+      async salvarConfig(c) { ler().config = Object.assign({}, c); gravar(); },
+      async todasAtividades() { return copia(ler().atividades); }
     };
   } else {
     const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
@@ -423,6 +426,7 @@
       },
       async excluirCliente(id) { ok(await sb.from('clientes').delete().eq('id', id)); },
       async novoToken(id) { const t = uuid(); ok(await sb.from('clientes').update({ token: t }).eq('id', id)); return t; },
+      async todasAtividades() { return ok(await sb.from('atividades').select('*').order('criado_em', { ascending: false })) || []; },
       async salvarConfig(c) { ok(await sb.from('configuracoes').upsert(vazioNulo({ owner_id: uid, google_agenda: c.google_agenda || '', whatsapp: c.whatsapp || '' }))); }
     };
   }
@@ -438,9 +442,10 @@
     const s = await api.sessao().catch(function () { return null; });
     if (!s) return telaLogin();
     $('nav').hidden = false;
-    $('topoDir').innerHTML = '<button class="icone" id="bConfig" title="Configurações" aria-label="Configurações">' + IC.eng + '</button>' +
+    $('topoDir').innerHTML = '<button class="icone" id="bExp" title="Exportar dados" aria-label="Exportar dados">' + IC.baixar + '</button><button class="icone" id="bConfig" title="Configurações" aria-label="Configurações">' + IC.eng + '</button>' +
       (DEMO ? '' : '<button class="icone" id="bSair" title="Sair" aria-label="Sair">' + IC.sair + '</button>');
     $('bConfig').onclick = modalConfig;
+    $('bExp').onclick = exportar;
     if ($('bSair')) $('bSair').onclick = async function () { await api.sair(); location.hash = ''; location.reload(); };
     try { await api.carregar(); }
     catch (e) { app.innerHTML = '<p class="erro">Não foi possível carregar os dados: ' + J.esc(e.message || e) + '</p>'; return; }
@@ -1075,8 +1080,10 @@
       '<label class="campo">E-mail da sua Agenda do Google <small>(o Gmail onde ficam as suas reuniões)</small><input type="email" name="google_agenda" value="' + J.esc(c.google_agenda || '') + '" placeholder="voce@gmail.com"></label>' +
       '<label class="campo">WhatsApp de atendimento <small>(aparece como botão na página do cliente)</small><input type="tel" name="whatsapp" value="' + J.esc(c.whatsapp || '') + '" placeholder="5581999999999"></label>' +
       '<p class="suave pequeno">A agenda só aparece no painel quando você está conectada à sua conta Google neste navegador. Ela não fica visível para mais ninguém.</p>' +
+      '<div style="border-top:1px solid var(--line);padding-top:16px;display:grid;gap:10px"><b>Cópia de segurança</b><span class="suave pequeno">Baixa uma planilha com leads, histórico, clientes e encontros. Guarde uma cópia de vez em quando.</span><div><button type="button" class="btn ghost small" id="bExportar">' + IC.baixar + 'Exportar dados (Excel)</button></div></div>' +
       '<div class="modal-acoes"><button type="button" class="btn ghost" data-fechar>Cancelar</button><button class="btn" type="submit">Salvar</button></div></form></div>';
     ligarModal();
+    $('bExportar').onclick = exportar;
     $('fCfg').onsubmit = async function (e) {
       e.preventDefault(); const f = e.target;
       try {
@@ -1085,6 +1092,59 @@
         if ((location.hash || '#inicio') === '#agenda') rota();
       } catch (err) { toast('Erro: ' + (err.message || err)); }
     };
+  }
+
+  // ==========================================================
+  // Exportar dados
+  // ==========================================================
+  function carregarXLSX() {
+    if (window.XLSX) return Promise.resolve();
+    return new Promise(function (ok, erro) {
+      const sc = document.createElement('script');
+      sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+      sc.onload = ok; sc.onerror = function () { erro(new Error('não foi possível carregar o gerador de planilha')); };
+      document.head.appendChild(sc);
+    });
+  }
+  async function exportar() {
+    toast('Preparando a planilha…');
+    try {
+      await carregarXLSX();
+      await api.carregar();
+      const ativs = await api.todasAtividades();
+      const nomeLead = {}; S.leads.forEach(function (l) { nomeLead[l.id] = l.nome; });
+      const nomeCli = {}; S.clientes.forEach(function (c) { nomeCli[c.id] = c.nome; });
+      const dt = function (ts) { if (!ts) return ''; const d = new Date(ts); return isNaN(d) ? '' : J.iso(d).split('-').reverse().join('/') + ' ' + J.num2(d.getHours()) + ':' + J.num2(d.getMinutes()); };
+      const dd = function (s) { return s ? String(s).slice(0, 10).split('-').reverse().join('/') : ''; };
+      const leads = S.leads.map(function (l) { return {
+        'Nome': l.nome, 'Etapa': J.nomeEtapa(l.etapa), 'WhatsApp': l.whatsapp || '', 'E-mail': l.email || '', 'Origem': l.origem || '', 'Profissão': l.profissao || '',
+        'Renda mensal': l.renda_faixa || '', 'Momento financeiro': l.momento || '', 'Quando quer começar': l.quando_comecar || '', 'Momento e motivo': l.motivo || '',
+        'Próximo passo': l.proximo_passo || '', 'Data do próximo passo': dd(l.proximo_passo_data), 'Diagnóstico': dt(l.diagnostico_em),
+        'Proposta (R$/mês)': l.valor_proposta == null ? '' : Number(l.valor_proposta), 'Motivo da perda': l.motivo_perda || '',
+        'Cliente vinculado': l.cliente_id ? (nomeCli[l.cliente_id] || '') : '', 'Entrou em': dt(l.created_at) }; });
+      const hist = ativs.slice().sort(function (a, b) { return String(b.criado_em).localeCompare(String(a.criado_em)); }).map(function (a) { return {
+        'Lead': nomeLead[a.lead_id] || '', 'Data': dt(a.criado_em), 'Tipo': NOME_TIPO[a.tipo] || a.tipo, 'Registro': a.texto }; });
+      const clientes = S.clientes.map(function (c) { const feitas = c.reunioes.filter(function (r) { return r.realizada; }).length; return {
+        'Nome': c.nome, 'Situação': { ativo: 'Em atendimento', pausado: 'Pausado', encerrado: 'Encerrado' }[c.situacao] || c.situacao, 'Profissão': c.profissao || '',
+        'WhatsApp': c.whatsapp || '', 'E-mail': c.email || '', 'Início': dd(c.inicio), 'Valor mensal (R$)': c.valor_mensal == null ? '' : Number(c.valor_mensal),
+        'Encontros realizados': feitas + ' de ' + c.reunioes.length, 'Como iniciamos': c.como_iniciamos || '', 'Onde estamos': c.onde_estamos || '',
+        'Para onde vamos': c.para_onde_vamos || '', 'Anotações internas': c.observacoes || '', 'Link da jornada': c.ativo ? linkDoCliente(c.token) : '(desligado)' }; });
+      const encontros = [];
+      S.clientes.forEach(function (c) { c.reunioes.forEach(function (r, i) { encontros.push({
+        'Cliente': c.nome, 'Encontro': i + 1, 'Data': dd(r.data), 'Horário': r.hora || '', 'Tema': r.tema || '', 'Realizado': r.realizada ? 'Sim' : 'Não',
+        'O que decidimos': r.resumo || '', 'Combinados': r.combinados || '' }); }); });
+      const wb = XLSX.utils.book_new();
+      [['Leads', leads], ['Histórico', hist], ['Clientes', clientes], ['Encontros', encontros]].forEach(function (par) {
+        const ws = par[1].length ? XLSX.utils.json_to_sheet(par[1]) : XLSX.utils.aoa_to_sheet([['Sem registros']]);
+        if (par[1].length) ws['!cols'] = Object.keys(par[1][0]).map(function (k) {
+          const larg = Math.max(k.length, ...par[1].map(function (r) { return String(r[k] == null ? '' : r[k]).length; }));
+          return { wch: Math.min(60, Math.max(10, larg + 2)) };
+        });
+        XLSX.utils.book_append_sheet(wb, ws, par[0]);
+      });
+      XLSX.writeFile(wb, 'painel-yale-barbosa-' + J.hojeISO() + '.xlsx');
+      toast('Planilha baixada.');
+    } catch (e) { toast('Não foi possível exportar: ' + (e.message || e)); }
   }
 
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modalEl.innerHTML) modalEl.innerHTML = ''; });
