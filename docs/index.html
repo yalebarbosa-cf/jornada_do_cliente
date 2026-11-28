@@ -398,7 +398,8 @@
       async excluirCliente(id) { ler(); mem.clientes = mem.clientes.filter(function (x) { return x.id !== id; }); mem.leads.forEach(function (l) { if (l.cliente_id === id) l.cliente_id = null; }); gravar(); },
       async novoToken(id) { const c = ler().clientes.find(function (x) { return x.id === id; }); c.token = uuid(); gravar(); return c.token; },
       async salvarConfig(c) { ler().config = Object.assign({}, c); gravar(); },
-      async todasAtividades() { return copia(ler().atividades); }
+      async todasAtividades() { return copia(ler().atividades); },
+      async trocarSenha() {}
     };
   } else {
     const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
@@ -439,6 +440,7 @@
       },
       async excluirCliente(id) { ok(await sb.from('clientes').delete().eq('id', id)); },
       async novoToken(id) { const t = uuid(); ok(await sb.from('clientes').update({ token: t }).eq('id', id)); return t; },
+      async trocarSenha(nova) { const r = await sb.auth.updateUser({ password: nova }); if (r.error) throw r.error; },
       async todasAtividades() { return ok(await sb.from('atividades').select('*').order('criado_em', { ascending: false })) || []; },
       async salvarConfig(c) { ok(await sb.from('configuracoes').upsert(vazioNulo({ owner_id: uid, google_agenda: c.google_agenda || '', whatsapp: c.whatsapp || '' }))); }
     };
@@ -1095,10 +1097,17 @@
       '<label class="campo">E-mail da sua Agenda do Google <small>(o Gmail onde ficam as suas reuniões)</small><input type="email" name="google_agenda" value="' + J.esc(c.google_agenda || '') + '" placeholder="voce@gmail.com"></label>' +
       '<label class="campo">WhatsApp de atendimento <small>(aparece como botão na página do cliente)</small><input type="tel" name="whatsapp" value="' + J.esc(c.whatsapp || '') + '" placeholder="5581999999999"></label>' +
       '<p class="suave pequeno">A agenda só aparece no painel quando você está conectada à sua conta Google neste navegador. Ela não fica visível para mais ninguém.</p>' +
+      (DEMO ? '' : '<div style="border-top:1px solid var(--line);padding-top:16px;display:grid;gap:10px"><b>Trocar senha</b><div style="display:flex;gap:10px;flex-wrap:wrap"><input type="password" id="novaSenha" autocomplete="new-password" placeholder="Nova senha (mín. 8 caracteres)" style="flex:1 1 220px"><button type="button" class="btn ghost small" id="bSenha">Trocar</button></div></div>') +
       '<div style="border-top:1px solid var(--line);padding-top:16px;display:grid;gap:10px"><b>Cópia de segurança</b><span class="suave pequeno">Baixa uma planilha com leads, histórico, clientes e encontros. Guarde uma cópia de vez em quando.</span><div><button type="button" class="btn ghost small" id="bExportar">' + IC.baixar + 'Exportar dados (Excel)</button></div></div>' +
       '<div class="modal-acoes"><button type="button" class="btn ghost" data-fechar>Cancelar</button><button class="btn" type="submit">Salvar</button></div></form></div>';
     ligarModal();
     $('bExportar').onclick = exportar;
+    if ($('bSenha')) $('bSenha').onclick = async function () {
+      const v = $('novaSenha').value;
+      if (v.length < 8) return toast('A senha precisa ter pelo menos 8 caracteres.');
+      try { await api.trocarSenha(v); $('novaSenha').value = ''; toast('Senha trocada. Use a nova no próximo login.'); }
+      catch (e) { toast('Não foi possível trocar: ' + (e.message || e)); }
+    };
     $('fCfg').onsubmit = async function (e) {
       e.preventDefault(); const f = e.target;
       try {
