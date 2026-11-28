@@ -15,6 +15,16 @@
   main { padding-block: 28px 120px; }
   .login-logo { display: block; height: 64px; width: auto; margin: 0 auto 28px; }
   .login-wrap { display: grid; justify-items: center; width: 100%; }
+  body.escuro { background: var(--night); color: var(--on-night); }
+  body.escuro .login-card { background: var(--night-2); border-color: color-mix(in srgb, var(--on-night-soft) 18%, transparent); box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
+  body.escuro .login-card h1 { color: var(--on-night); }
+  body.escuro .login-card .eyebrow { color: var(--coin); }
+  body.escuro label.campo { color: var(--on-night); }
+  body.escuro .login-card input { background: var(--night); border-color: color-mix(in srgb, var(--on-night-soft) 28%, transparent); color: var(--on-night); }
+  body.escuro .login-card input:focus { border-color: var(--coin); }
+  body.escuro .login-card input:-webkit-autofill { -webkit-text-fill-color: var(--on-night); -webkit-box-shadow: 0 0 0 40px var(--night) inset; caret-color: var(--on-night); }
+  body.escuro .erro { color: #E6A08F; }
+  body.escuro #avisoDemo { display: none; }
   .aviso { background: var(--night); color: var(--on-night); font-size: 14px; padding: 10px 0; }
   .aviso b { color: var(--coin); }
 
@@ -489,12 +499,13 @@
 
   function telaLogin() {
     document.querySelector('.topo').hidden = true;
-    app.innerHTML = '<div class="login"><div class="login-wrap"><img class="login-logo" src="logo.png" alt="Yale Barbosa, planejadora financeira"><form class="login-card" id="fLogin">' +
+    document.body.classList.add('escuro');
+    app.innerHTML = '<div class="login"><div class="login-wrap"><img class="login-logo" src="logo-branca.png" alt="Yale Barbosa, planejadora financeira"><form class="login-card" id="fLogin">' +
       '<div class="eyebrow">Área da planejadora</div><h1>Seu painel</h1>' +
       '<label class="campo">E-mail<input type="email" name="email" autocomplete="username" required></label>' +
       '<label class="campo">Senha<input type="password" name="senha" autocomplete="current-password" required></label>' +
       '<div class="erro" id="erro" role="alert"></div>' +
-      '<button class="btn" type="submit">Entrar <span aria-hidden="true">→</span></button></form></div></div>';
+      '<button class="btn gold" type="submit">Entrar <span aria-hidden="true">→</span></button></form></div></div>';
     $('fLogin').onsubmit = async function (e) {
       e.preventDefault();
       const f = e.target, b = f.querySelector('button'); b.disabled = true;
